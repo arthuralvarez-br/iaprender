@@ -2010,6 +2010,403 @@ Envie:`,
         ehDesafioFinal: true
       }
     ]
+  },
+  4: {
+    tema: 'Comunicação de Alto Impacto',
+    passos: [
+      {
+        tipo: 'conceito',
+        aria: (s) => `${s && s.nome ? s.nome.split(' ')[0] : 'você'}, você já domina CTF e tom. Agora vamos aplicar isso em comunicação real — o tipo que muda decisões.
+
+Comunicação de alto impacto tem três características:
+**Clareza** — a pessoa entende na primeira leitura, sem reler
+**Relevância** — só diz o que importa para quem vai ler
+**Ação** — deixa claro o que você quer que aconteça depois
+
+A maioria dos emails, mensagens e relatórios falha em pelo menos uma dessas três. E a IA pode te ajudar a corrigir isso — se você souber instruir direito.
+
+No seu trabalho, qual tipo de comunicação você mais precisa melhorar?`,
+        quickReplies: ['Emails para liderança', 'Feedback para equipe', 'Propostas e apresentações', 'Mensagens no WhatsApp/Slack'],
+        xp: 10
+      },
+      {
+        tipo: 'exemplo_ruim',
+        aria: (s) => `Veja este email real (adaptado):
+
+---
+*"Oi, tudo bem? Queria te atualizar sobre o projeto. A gente teve algumas reuniões e discutiu bastante sobre os próximos passos. Tem muita coisa acontecendo. Qualquer dúvida me fala."*
+---
+
+Problemas: sem clareza (o que aconteceu?), sem relevância (qual projeto?), sem ação (o que eu faço agora?).
+
+Quem recebe esse email não sabe o que fazer com ele.
+
+O que falta mais nessa mensagem?`,
+        quickReplies: ['Clareza — não diz o que aconteceu', 'Ação — não diz o que precisa ser feito', 'As duas coisas'],
+        xp: 15
+      },
+      {
+        tipo: 'exemplo_bom',
+        aria: (s) => `O mesmo email com as três características:
+
+---
+*"[Nome], atualização do Projeto X:*
+*O que decidimos: prazo estendido para 15/04 e budget aprovado.*
+*O que preciso de você: confirmação até sexta se a sua equipe consegue entregar o módulo 2 nesse prazo.*
+*Resposta em 1 linha é suficiente."*
+---
+
+**Clareza** — uma linha por assunto
+**Relevância** — só o que importa para quem recebe
+**Ação** — pedido específico com prazo
+
+Resultado: resposta em minutos, não dias.
+
+Você consegue identificar cada um dos três elementos?`,
+        quickReplies: ['Sim, ficou claro', 'Quero ver outro exemplo', 'Já uso isso, quero o próximo nível'],
+        xp: 15
+      },
+      {
+        tipo: 'exercicio',
+        aria: (s) => {
+          const area = (s && s.area) ? s.area : 'seu trabalho';
+          return `Agora escreva um prompt pedindo para a IA melhorar uma comunicação real sua.
+
+Pode ser um email que você precisa enviar, uma mensagem difícil, ou um comunicado para a equipe em ${area}.
+
+No prompt, inclua:
+- Quem vai receber
+- O que precisa ficar claro
+- Qual ação você quer gerar
+
+Digite seu prompt:`;
+        },
+        quickReplies: [],
+        xp: 20,
+        aguardaTextoLivre: true
+      },
+      {
+        tipo: 'avaliacao',
+        aria: null,
+        quickReplies: ['Entendi, vou ajustar', 'Tenho dúvida sobre o tom'],
+        xp: 25
+      },
+      {
+        tipo: 'desafio',
+        aria: (s) => `Desafio final do Nível 4.
+
+Escreva um prompt que peça à IA para criar uma comunicação de alto impacto para uma situação real do seu trabalho.
+
+Critério para avançar: o prompt precisa definir **quem recebe**, **o que deve ficar claro** e **qual ação deve gerar**.
+
+Exemplo do critério: *"...para que o gestor aprove o orçamento ainda esta semana."*
+
+Envie:`,
+        quickReplies: [],
+        xp: 30,
+        aguardaTextoLivre: true,
+        ehDesafioFinal: true
+      }
+    ]
+  },
+  5: {
+    tema: 'Clareza, Prioridade e Ritual',
+    passos: [
+      {
+        tipo: 'conceito',
+        aria: (s) => `${s && s.nome ? s.nome.split(' ')[0] : 'você'}, chegamos num ponto que separa quem usa IA de quem depende de IA.
+
+A diferença está em ter um **ritual** — um momento fixo onde você usa IA com intenção, não no impulso.
+
+Três ferramentas para isso:
+
+**Eisenhower** — classifica tarefas em urgente/importante para decidir o que fazer, delegar ou descartar
+**Bloco Único** — um período protegido no dia para trabalho de foco profundo, sem interrupções
+**Prompt de planejamento** — você descreve seu dia à IA e ela te ajuda a priorizar
+
+A maioria das pessoas usa IA para apagar incêndio. O objetivo aqui é usar IA para evitar o incêndio.
+
+Como você organiza suas prioridades hoje?`,
+        quickReplies: ['Lista no papel ou app', 'Vou resolvendo conforme aparece', 'Tenho reunião de planejamento', 'Não tenho método definido'],
+        xp: 10
+      },
+      {
+        tipo: 'exemplo_ruim',
+        aria: (s) => `Prompt típico de quem usa IA no impulso:
+
+---
+*"Me ajuda a organizar meu dia."*
+---
+
+A IA não tem contexto nenhum. Vai gerar uma lista genérica de "separe o importante do urgente" que você já sabe.
+
+Resultado: resposta inútil, você fecha e vai fazer do jeito que sempre fez.
+
+O que falta para esse prompt gerar algo útil de verdade?`,
+        quickReplies: ['Falta dizer o que tem para fazer', 'Falta contexto — qual é a situação do dia', 'Faltam as duas coisas'],
+        xp: 15
+      },
+      {
+        tipo: 'exemplo_bom',
+        aria: (s) => `Com contexto real:
+
+---
+*"Sou gerente e tenho isso hoje: reunião às 10h com cliente insatisfeito, relatório atrasado 2 dias, 3 pessoas esperando feedback meu, e uma proposta com prazo amanhã. Usando a matriz de Eisenhower, me diga em qual quadrante cada tarefa está e por onde eu começo. Resposta em tópicos, máximo 5 linhas."*
+---
+
+A IA agora tem o seu dia real. A resposta vai ser específica para você, não para qualquer pessoa.
+
+**Eisenhower em resumo:**
+- Urgente + Importante → Faça agora
+- Importante + Não urgente → Agende
+- Urgente + Não importante → Delegue
+- Nenhum dos dois → Descarte
+
+Faz sentido aplicar isso com IA no início de cada dia?`,
+        quickReplies: ['Sim, quero montar meu ritual', 'Já uso algo parecido', 'Nunca tinha pensado nisso'],
+        xp: 15
+      },
+      {
+        tipo: 'exercicio',
+        aria: (s) => `Agora monte um prompt de planejamento para o seu dia real.
+
+Descreva para a IA:
+- As tarefas ou compromissos que você tem hoje (pode ser genérico)
+- Peça para ela classificar usando Eisenhower ou sugerir por onde começar
+- Defina o formato da resposta
+
+Digite seu prompt de planejamento:`,
+        quickReplies: [],
+        xp: 20,
+        aguardaTextoLivre: true
+      },
+      {
+        tipo: 'avaliacao',
+        aria: null,
+        quickReplies: ['Entendi, vou ajustar', 'Como uso isso todo dia?'],
+        xp: 25
+      },
+      {
+        tipo: 'desafio',
+        aria: (s) => `Desafio final do Nível 5.
+
+Crie um prompt de ritual matinal — algo que você poderia usar todo dia por 5 minutos para planejar com IA.
+
+Critério para avançar: o prompt precisa ter contexto dinâmico (onde você coloca as tarefas do dia), um método de priorização claro e formato de resposta que você consegue ler em 1 minuto.
+
+Envie seu prompt de ritual:`,
+        quickReplies: [],
+        xp: 30,
+        aguardaTextoLivre: true,
+        ehDesafioFinal: true
+      }
+    ]
+  },
+  6: {
+    tema: 'UNO e ESAON',
+    passos: [
+      {
+        tipo: 'conceito',
+        aria: (s) => `${s && s.nome ? s.nome.split(' ')[0] : 'você'}, este nível tem conteúdo que ainda não foi publicado.
+
+São dois frameworks do livro **Tríade da Nova Liderança** de Arthur Alvarez — você está vendo antes de todo mundo.
+
+**UNO — 9 perguntas de diagnóstico:**
+Antes de qualquer decisão importante, você responde 9 perguntas que mapeiam o contexto completo. A IA usa esse mapeamento para gerar análises precisas.
+
+**ESAON — 5 passos de execução:**
+Estrutura → Análise → Ação → Observação → Narrativa
+Um protocolo para transformar qualquer desafio em plano executável com ajuda da IA.
+
+A diferença entre um líder que usa IA e um que domina IA está nessa estrutura.
+
+Você costuma diagnosticar bem antes de decidir, ou age primeiro e ajusta depois?`,
+        quickReplies: ['Diagnostico antes — preciso de contexto', 'Ajo primeiro — aprendo no caminho', 'Depende da urgência'],
+        xp: 10
+      },
+      {
+        tipo: 'exemplo_ruim',
+        aria: (s) => `Decisão sem diagnóstico:
+
+---
+*"Minha equipe está desmotivada. O que eu faço?"*
+---
+
+A IA não sabe: desmotivada por quê? Desde quando? Quem especificamente? O que já foi tentado? Qual é o impacto?
+
+Resposta garantida: lista genérica de "reconheça o trabalho deles, alinhe expectativas, ofereça feedback".
+
+Você já sabe disso. Não precisava de IA.
+
+O que falta antes de perguntar "o que eu faço"?`,
+        quickReplies: ['Diagnóstico — entender o que está acontecendo', 'Contexto — quem, quando, por quê', 'As duas coisas'],
+        xp: 15
+      },
+      {
+        tipo: 'exemplo_bom',
+        aria: (s) => `Com o framework UNO (simplificado):
+
+---
+*"Contexto: sou gestor de uma equipe de 6 pessoas em consultoria. Nos últimos 30 dias: 2 entregas atrasadas, aumento de erros, menos iniciativa nas reuniões. Já tentei: conversa individual com 2 pessoas — disseram que estão bem. Suspeita: sobrecarga + falta de clareza nos projetos. Pergunta: usando análise de causa-raiz, quais são as 3 hipóteses mais prováveis e quais ações eu devo testar primeiro? Formato: tópicos com hipótese + ação específica."*
+---
+
+Resultado completamente diferente. A IA agora tem um diagnóstico real para trabalhar.
+
+**UNO** transforma a pergunta antes de fazer. **ESAON** organiza a execução depois da resposta.
+
+Faz sentido estruturar assim antes de pedir para a IA?`,
+        quickReplies: ['Sim — o diagnóstico muda tudo', 'Como memorizo o UNO?', 'Quero aplicar agora'],
+        xp: 15
+      },
+      {
+        tipo: 'exercicio',
+        aria: (s) => {
+          const area = (s && s.area) ? s.area : 'seu trabalho';
+          return `Escolha um desafio real que você tem agora em ${area}.
+
+Monte um prompt com diagnóstico estruturado antes de pedir a solução. Inclua:
+- O que está acontecendo (fatos, não opinião)
+- Desde quando e quem está envolvido
+- O que já foi tentado
+- O que você suspeita ser a causa
+- O que você quer que a IA faça com esse contexto
+
+Digite seu prompt de diagnóstico:`;
+        },
+        quickReplies: [],
+        xp: 20,
+        aguardaTextoLivre: true
+      },
+      {
+        tipo: 'avaliacao',
+        aria: null,
+        quickReplies: ['Entendi, vou reescrever', 'Posso usar o ESAON junto?'],
+        xp: 25
+      },
+      {
+        tipo: 'desafio',
+        aria: (s) => `Desafio final do Nível 6.
+
+Aplique o framework completo: diagnóstico UNO + pedido de execução ESAON.
+
+**ESAON:**
+- **E**strutura: organize o problema
+- **S**olução: peça alternativas
+- **A**ção: defina próximos passos
+- **O**bservação: métricas de sucesso
+- **N**arrativa: como comunicar para o time
+
+Escreva um prompt que cubra pelo menos 3 dos 5 passos do ESAON para um desafio real.
+
+Envie:`,
+        quickReplies: [],
+        xp: 30,
+        aguardaTextoLivre: true,
+        ehDesafioFinal: true
+      }
+    ]
+  },
+  7: {
+    tema: 'Prompt PACEF — Nível Mestre',
+    passos: [
+      {
+        tipo: 'conceito',
+        aria: (s) => `${s && s.nome ? s.nome.split(' ')[0] : 'você'}, chegou ao último nível.
+
+**PACEF** é o prompt mais completo que existe para uso profissional de IA. Cada letra é um elemento:
+
+**P — Persona:** diga à IA quem ela deve ser (especialista em quê, com que experiência)
+**A — Ação:** o que exatamente você quer que ela faça (verbo de ação preciso)
+**C — Contexto:** sua situação completa (quem você é, qual o cenário, qual o problema)
+**E — Exemplos:** mostre como você quer que a resposta pareça (antes/depois, estilo, referência)
+**F — Formato:** estrutura exata da resposta (tópicos, tabela, parágrafos, tamanho)
+
+Qualquer prompt profissional que funciona tem esses 5 elementos — com ou sem nome.
+
+Você consegue identificar qual desses elementos você ainda não usa nos seus prompts?`,
+        quickReplies: ['Persona — nunca disse à IA quem ela deve ser', 'Exemplos — nunca mostrei como quero', 'Formato — deixo a IA decidir', 'Uso todos, mas separados'],
+        xp: 10
+      },
+      {
+        tipo: 'exemplo_ruim',
+        aria: (s) => `Prompt sem PACEF:
+
+---
+*"Me ajuda a fazer uma apresentação sobre resultados do trimestre."*
+---
+
+Sem persona (a IA não sabe que especialidade usar), sem contexto (que resultados? para quem?), sem exemplos, sem formato.
+
+Resultado: estrutura genérica de apresentação que qualquer pessoa geraria sem IA.
+
+Qual elemento do PACEF mudaria mais o resultado aqui?`,
+        quickReplies: ['Persona — definir que tipo de especialista', 'Contexto — para quem é a apresentação', 'Exemplos — mostrar o estilo que quero'],
+        xp: 15
+      },
+      {
+        tipo: 'exemplo_bom',
+        aria: (s) => `Com PACEF completo:
+
+---
+**P:** *"Aja como consultor sênior de comunicação executiva com 15 anos de experiência em apresentações para C-level."*
+**A:** *"Crie a estrutura de uma apresentação de resultados trimestrais."*
+**C:** *"Sou gerente de produto em startup de 50 pessoas. Resultados: crescimento de 23% em receita, mas churn aumentou 8%. Audiência: CEO e investidores. Tom: transparente mas otimista."*
+**E:** *"Siga o estilo: problema → dados → causa → solução → próximos passos."*
+**F:** *"Máximo 8 slides. Para cada slide: título + 3 bullets. Sem texto corrido."*
+---
+
+Esse prompt vai gerar uma apresentação que você pode usar quase sem editar.
+
+Qual elemento do PACEF você acha mais poderoso?`,
+        quickReplies: ['Persona — muda completamente o estilo', 'Exemplos — dá direção exata', 'Contexto — é o mais importante', 'O conjunto todo'],
+        xp: 15
+      },
+      {
+        tipo: 'exercicio',
+        aria: (s) => {
+          const area = (s && s.area) ? s.area : 'seu trabalho';
+          return `Agora monte um prompt PACEF para um entregável real que você precisa produzir em ${area}.
+
+Pode ser uma apresentação, um relatório, uma proposta, um plano.
+
+Use a estrutura:
+**P:** (persona da IA)
+**A:** (ação específica)
+**C:** (seu contexto completo)
+**E:** (exemplo de como quer)
+**F:** (formato exato)
+
+Não precisa ser perfeito — o que importa é usar os 5 elementos.
+
+Digite seu prompt PACEF:`;
+        },
+        quickReplies: [],
+        xp: 20,
+        aguardaTextoLivre: true
+      },
+      {
+        tipo: 'avaliacao',
+        aria: null,
+        quickReplies: ['Entendi, vou completar', 'Como uso PACEF no dia a dia?'],
+        xp: 25
+      },
+      {
+        tipo: 'desafio',
+        aria: (s) => `Desafio final — Nível Mestre.
+
+Escreva o melhor prompt PACEF que você consegue para o maior desafio profissional que você tem agora.
+
+Critério: todos os 5 elementos presentes (P, A, C, E, F) com pelo menos 2 linhas cada.
+
+Este é o prompt que você vai usar de verdade. Faça valer.
+
+Envie seu prompt PACEF:`,
+        quickReplies: [],
+        xp: 50,
+        aguardaTextoLivre: true,
+        ehDesafioFinal: true
+      }
+    ]
   }
 };
 
