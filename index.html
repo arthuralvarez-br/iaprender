@@ -1,0 +1,3458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAprender — Sua Jornada com IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b12;
+    --bg2: #0e1320;
+    --bg3: #141923;
+    --card: #111827;
+    --border: #1e2a3a;
+    --border2: #253040;
+    --teal: #00c4a0;
+    --teal2: #00e8be;
+    --purple: #7c6fef;
+    --purple2: #a599ff;
+    --gold: #f0b429;
+    --text: #e8edf5;
+    --text2: #8c9ab0;
+    --text3: #5c6880;
+    --danger: #f05454;
+    --green: #30d080;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    --glow-teal: 0 0 30px rgba(0,196,160,0.15);
+    --glow-purple: 0 0 30px rgba(124,111,239,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* ── LAYOUT ── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ══════════════════════════════════════════
+     SPLASH SCREEN
+  ══════════════════════════════════════════ */
+  #splash {
+    background: var(--bg);
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+  }
+
+  .splash-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 20% 30%, rgba(0,196,160,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 60% at 80% 70%, rgba(124,111,239,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .splash-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .splash-inner {
+    position: relative;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .splash-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--teal), var(--purple));
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: var(--glow-teal);
+  }
+
+  .logo-text {
+    font-family: var(--font-head);
+    font-size: 1.6rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--teal), var(--purple2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+
+  .splash-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 1rem;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  .splash-title {
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 6vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 1.2rem;
+    animation: fadeDown 0.6s 0.2s ease both;
+  }
+
+  .splash-title span {
+    background: linear-gradient(90deg, var(--teal2), var(--purple2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .splash-subtitle {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--text2);
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.6s 0.3s ease both;
+  }
+
+  .level-pills {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.6s 0.4s ease both;
+  }
+
+  .level-pill {
+    padding: 5px 14px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .level-pill.done { background: rgba(0,196,160,0.12); color: var(--teal); border: 1px solid rgba(0,196,160,0.2); }
+  .level-pill.active { background: linear-gradient(90deg, var(--teal), var(--purple)); color: white; }
+  .level-pill.locked { background: var(--bg3); color: var(--text3); border: 1px solid var(--border); }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    background: linear-gradient(135deg, var(--teal), var(--purple));
+    color: white;
+    border: none;
+    border-radius: 100px;
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 24px rgba(0,196,160,0.25);
+    width: 100%;
+    justify-content: center;
+    animation: fadeDown 0.6s 0.5s ease both;
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,196,160,0.35); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .splash-footer {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    animation: fadeDown 0.6s 0.6s ease both;
+  }
+
+  .btn-creator {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--text2);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-creator:hover { border-color: var(--teal); color: var(--teal); }
+
+  .creator-avatar {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  /* ══════════════════════════════════════════
+     REGISTER SCREEN
+  ══════════════════════════════════════════ */
+  #register {
+    padding: 2rem;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+  }
+
+  .register-inner {
+    max-width: 460px;
+    width: 100%;
+  }
+
+  .reg-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text3);
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+  }
+  .reg-back:hover { color: var(--text); }
+
+  .reg-title {
+    font-family: var(--font-head);
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+  }
+
+  .reg-sub { color: var(--text2); font-size: 0.95rem; margin-bottom: 2rem; }
+
+  .form-group { margin-bottom: 1.2rem; }
+
+  .form-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text2);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  .form-input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(0,196,160,0.1);
+  }
+
+  .chips-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .chip.selected {
+    background: rgba(0,196,160,0.12);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .form-note { font-size: 0.78rem; color: var(--text3); margin-top: 0.4rem; }
+
+  /* ══════════════════════════════════════════
+     ONBOARDING
+  ══════════════════════════════════════════ */
+  #onboarding {
+    padding: 2rem;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+  }
+
+  .onboard-inner {
+    max-width: 460px;
+    width: 100%;
+  }
+
+  .progress-steps {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 2.5rem;
+  }
+
+  .step-dot {
+    height: 4px;
+    flex: 1;
+    border-radius: 2px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+
+  .step-dot.done { background: var(--teal); }
+  .step-dot.active { background: linear-gradient(90deg, var(--teal), var(--purple)); }
+
+  .onboard-step { display: none; }
+  .onboard-step.active { display: block; }
+
+  .onboard-emoji { font-size: 2.5rem; margin-bottom: 1rem; }
+  .onboard-title {
+    font-family: var(--font-head);
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+  .onboard-sub { color: var(--text2); font-size: 0.95rem; margin-bottom: 1.8rem; line-height: 1.6; }
+
+  .option-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+  }
+
+  .option-card:hover { border-color: var(--border2); }
+  .option-card.selected { border-color: var(--teal); background: rgba(0,196,160,0.06); }
+
+  .option-icon { font-size: 1.5rem; }
+  .option-title { font-weight: 600; font-size: 0.95rem; }
+  .option-desc { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
+
+  .btn-row { display: flex; gap: 10px; margin-top: 1.5rem; }
+
+  .btn-secondary {
+    padding: 13px 24px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--text2);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--border2); color: var(--text); }
+
+  .btn-next {
+    flex: 1;
+    padding: 13px 24px;
+    background: linear-gradient(135deg, var(--teal), var(--purple));
+    border: none;
+    border-radius: 100px;
+    color: white;
+    font-family: var(--font-head);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-next:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* ══════════════════════════════════════════
+     MAIN APP (CHAT)
+  ══════════════════════════════════════════ */
+  #app {
+    flex-direction: column;
+    height: 100vh;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .aria-avatar {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--teal), var(--purple));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .aria-name {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .aria-status {
+    font-size: 0.75rem;
+    color: var(--teal);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    background: var(--teal);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  /* LEVEL / XP BAR */
+  .level-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .level-badge {
+    font-family: var(--font-head);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    background: linear-gradient(90deg, var(--teal), var(--purple));
+    border-radius: 100px;
+    color: white;
+    white-space: nowrap;
+  }
+
+  .xp-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+  }
+
+  .xp-label {
+    font-size: 0.68rem;
+    color: var(--text3);
+    font-weight: 600;
+  }
+
+  .xp-track {
+    width: 80px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--purple));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* MESSAGES */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .msg {
+    display: flex;
+    gap: 10px;
+    max-width: 85%;
+    animation: msgIn 0.3s ease;
+  }
+
+  .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+  .msg.aria { align-self: flex-start; }
+
+  .msg-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .msg-avatar.aria-av {
+    background: linear-gradient(135deg, var(--teal), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+  }
+
+  .msg-bubble {
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .msg.aria .msg-bubble {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+    color: var(--text);
+  }
+
+  .msg.user .msg-bubble {
+    background: linear-gradient(135deg, rgba(0,196,160,0.15), rgba(124,111,239,0.15));
+    border: 1px solid rgba(0,196,160,0.25);
+    border-bottom-right-radius: 4px;
+    color: var(--text);
+  }
+
+  .typing-dots {
+    display: flex;
+    gap: 5px;
+    padding: 4px 2px;
+    align-items: center;
+  }
+
+  .typing-dots span {
+    width: 7px; height: 7px;
+    background: var(--text3);
+    border-radius: 50%;
+    animation: typingBounce 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  /* XP BADGE IN CHAT */
+  .xp-badge-msg {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    padding: 5px 12px;
+    background: rgba(240,180,41,0.12);
+    border: 1px solid rgba(240,180,41,0.25);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  /* QUICK REPLIES */
+  .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 16px 8px;
+  }
+
+  .qr-btn {
+    padding: 8px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--text2);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .qr-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* WHATSAPP BANNER */
+  .wa-banner {
+    display: none;
+    margin: 0 16px 8px;
+    padding: 12px 16px;
+    background: rgba(37,211,102,0.08);
+    border: 1px solid rgba(37,211,102,0.2);
+    border-radius: var(--radius-sm);
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .wa-banner:hover { background: rgba(37,211,102,0.12); }
+  .wa-icon { font-size: 1.5rem; }
+  .wa-info { flex: 1; }
+  .wa-title { font-size: 0.85rem; font-weight: 600; color: #25d366; }
+  .wa-sub { font-size: 0.75rem; color: var(--text2); }
+  .wa-close { color: var(--text3); font-size: 1.1rem; cursor: pointer; padding: 4px; }
+
+  /* INPUT */
+  .input-area {
+    padding: 12px 16px 20px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .chat-input {
+    flex: 1;
+    padding: 13px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    resize: none;
+    outline: none;
+    max-height: 120px;
+    min-height: 46px;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+
+  .chat-input:focus { border-color: var(--teal); }
+  .chat-input::placeholder { color: var(--text3); }
+
+  .send-btn {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, var(--teal), var(--purple));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .send-btn:hover { opacity: 0.9; transform: scale(1.05); }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ══════════════════════════════════════════
+     MODALS
+  ══════════════════════════════════════════ */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    max-width: 440px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .modal-head {
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-title {
+    font-family: var(--font-head);
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+
+  .modal-close {
+    width: 32px; height: 32px;
+    background: var(--bg3);
+    border: none;
+    border-radius: 8px;
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { background: var(--border); color: var(--text); }
+
+  .modal-body { padding: 24px; }
+
+  /* CREATOR MODAL */
+  .creator-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 1.5rem;
+  }
+
+  .creator-photo {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--teal);
+  }
+
+  .creator-info-text .creator-name {
+    font-family: var(--font-head);
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 2px;
+  }
+
+  .creator-info-text .creator-role {
+    font-size: 0.8rem;
+    color: var(--teal);
+    font-weight: 500;
+  }
+
+  .creator-bio {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text2);
+    margin-bottom: 1.5rem;
+  }
+
+  .creator-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .creator-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .creator-link:hover { border-color: var(--teal); color: var(--teal); }
+  .creator-link-icon { font-size: 1.2rem; }
+
+  .triade-section {
+    margin-top: 1.5rem;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(0,196,160,0.06), rgba(124,111,239,0.06));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .triade-title {
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .pillar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 0.83rem;
+    color: var(--text2);
+  }
+
+  .pillar-num {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .pillar-num.p1 { background: rgba(240,180,41,0.15); color: var(--gold); }
+  .pillar-num.p2 { background: rgba(124,111,239,0.15); color: var(--purple2); }
+  .pillar-num.p3 { background: rgba(0,196,160,0.15); color: var(--teal); }
+  .pillar.active-pillar { color: var(--text); font-weight: 500; }
+
+  /* LEVEL UP MODAL */
+  .levelup-content {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .levelup-emoji { font-size: 3.5rem; margin-bottom: 1rem; display: block; }
+  .levelup-title { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .levelup-title span { background: linear-gradient(90deg, var(--teal), var(--purple2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .levelup-sub { color: var(--text2); margin-bottom: 1.5rem; line-height: 1.6; }
+
+  .levelup-stats {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-card {
+    flex: 1;
+    padding: 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+
+  .stat-value { font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; color: var(--teal); }
+  .stat-label { font-size: 0.72rem; color: var(--text2); margin-top: 2px; }
+
+  /* INVITE MODAL */
+  .invite-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .invite-input {
+    flex: 1;
+    padding: 11px 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .invite-input:focus { border-color: var(--teal); }
+
+  .btn-add-invite {
+    padding: 11px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--teal);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-add-invite:hover { border-color: var(--teal); }
+
+  /* API KEY BANNER */
+
+  /* CONFETTI */
+  .confetti-container {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 200;
+    overflow: hidden;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    width: 8px; height: 8px;
+    top: -10px;
+    animation: confettiFall linear forwards;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+  }
+
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* UTILITY */
+  .mt-8 { margin-top: 8px; }
+  .hidden { display: none !important; }
+  .text-teal { color: var(--teal); }
+  .text-gold { color: var(--gold); }
+  .text-purple { color: var(--purple2); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     SPLASH SCREEN
+══════════════════════════════════════════ -->
+<div id="splash" class="screen active">
+  <div class="splash-bg"></div>
+  <div class="splash-grid"></div>
+  <div class="splash-inner">
+    <div class="splash-logo">
+      <div class="logo-icon">🧠</div>
+      <div class="logo-text">IAprender</div>
+    </div>
+
+    <p class="splash-eyebrow">Sua jornada com Inteligência Artificial</p>
+
+    <h1 class="splash-title">
+      Aprenda a conversar<br>com <span>IA de verdade</span>
+    </h1>
+
+    <p class="splash-subtitle">
+      7 níveis do básico ao avançado.<br>
+      Uma tutora real, honesta e didática.<br>
+      Para quem quer dominar o futuro hoje.
+    </p>
+
+    <div class="level-pills">
+      <span class="level-pill active">N1 · O que é IA</span>
+      <span class="level-pill locked">N2 · Fórmula CTF</span>
+      <span class="level-pill locked">N3 · Tom e Voz</span>
+      <span class="level-pill locked">N4 · Comunicação</span>
+      <span class="level-pill locked">N5 · Eisenhower + Bloco Único</span>
+      <span class="level-pill locked">N6 · UNO + ESAON</span>
+      <span class="level-pill locked">N7 · PACEF Mestre</span>
+    </div>
+
+    <button class="btn-primary" onclick="checkSavedAndStart()">
+      🚀 Começar minha jornada
+    </button>
+
+    <div class="splash-footer">
+      <button class="btn-creator" onclick="openModal('modal-creator')">
+        <img src="data:image/jpeg;base64,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" 
+             alt="Arthur" class="creator-avatar" id="creator-av-splash">
+        Conheça o criador
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     REGISTER SCREEN
+══════════════════════════════════════════ -->
+<div id="register" class="screen">
+  <div style="padding: 2rem; align-items: center; display: flex; justify-content: center; flex: 1; background: var(--bg);">
+    <div class="register-inner">
+      <button class="reg-back" onclick="goTo('splash')">← Voltar</button>
+      
+      <h2 class="reg-title">Vamos nos conhecer 👋</h2>
+      <p class="reg-sub">Só 3 dados para personalizar sua jornada. Rápido, prometo!</p>
+
+      <div class="form-group">
+        <label class="form-label">Seu nome *</label>
+        <input type="text" class="form-input" id="reg-nome" placeholder="Como posso te chamar?">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">WhatsApp *</label>
+        <input type="tel" class="form-input" id="reg-whats" placeholder="(11) 99999-9999">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">E-mail *</label>
+        <input type="email" class="form-input" id="reg-email" placeholder="seu@email.com">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Faixa de idade</label>
+        <div class="chips-wrap" id="chips-idade">
+          <span class="chip" onclick="toggleChip(this, 'idade')">40-45</span>
+          <span class="chip" onclick="toggleChip(this, 'idade')">46-50</span>
+          <span class="chip" onclick="toggleChip(this, 'idade')">51-60</span>
+          <span class="chip" onclick="toggleChip(this, 'idade')">61-70</span>
+          <span class="chip" onclick="toggleChip(this, 'idade')">71+</span>
+          <span class="chip" onclick="toggleChip(this, 'idade')">Prefiro não dizer</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Sua situação profissional</label>
+        <div class="chips-wrap" id="chips-situacao">
+          <span class="chip" onclick="toggleChip(this, 'situacao')">Empregado(a)</span>
+          <span class="chip" onclick="toggleChip(this, 'situacao')">Empreendedor(a)</span>
+          <span class="chip" onclick="toggleChip(this, 'situacao')">Autônomo(a)</span>
+          <span class="chip" onclick="toggleChip(this, 'situacao')">Gestor(a)</span>
+          <span class="chip" onclick="toggleChip(this, 'situacao')">Recolocação</span>
+          <span class="chip" onclick="toggleChip(this, 'situacao')">Aposentado(a)</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Área de atuação</label>
+        <div class="chips-wrap" id="chips-area">
+          <span class="chip" onclick="toggleChip(this, 'area')">Saúde</span>
+          <span class="chip" onclick="toggleChip(this, 'area')">Educação</span>
+          <span class="chip" onclick="toggleChip(this, 'area')">Negócios</span>
+          <span class="chip" onclick="toggleChip(this, 'area')">Jurídico</span>
+          <span class="chip" onclick="toggleChip(this, 'area')">Tecnologia</span>
+          <span class="chip" onclick="toggleChip(this, 'area')">Comunicação</span>
+          <span class="chip" onclick="toggleChip(this, 'area')">Outra</span>
+        </div>
+        <p class="form-note">Selecione até 2 áreas</p>
+      </div>
+
+      <button class="btn-primary" onclick="submitRegister()" style="margin-top: 1rem;">
+        Continuar →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ONBOARDING
+══════════════════════════════════════════ -->
+<div id="onboarding" class="screen">
+  <div style="padding: 2rem; display: flex; align-items: center; justify-content: center; flex: 1; background: var(--bg);">
+    <div class="onboard-inner">
+      <div class="progress-steps" id="ob-steps">
+        <div class="step-dot active" data-step="0"></div>
+        <div class="step-dot" data-step="1"></div>
+        <div class="step-dot" data-step="2"></div>
+      </div>
+
+      <!-- Step 0: Foco -->
+      <div class="onboard-step active" id="ob-step-0">
+        <div class="onboard-emoji">🎯</div>
+        <h2 class="onboard-title">Onde você quer aplicar IA?</h2>
+        <p class="onboard-sub">Sua jornada será personalizada para o que importa mais pra você agora.</p>
+
+        <div class="option-card" onclick="selectOption(this, 'foco')" data-val="pessoal">
+          <span class="option-icon">🏡</span>
+          <div>
+            <div class="option-title">Vida Pessoal</div>
+            <div class="option-desc">Saúde, família, rotina, bem-estar e crescimento pessoal</div>
+          </div>
+        </div>
+        <div class="option-card" onclick="selectOption(this, 'foco')" data-val="profissional">
+          <span class="option-icon">💼</span>
+          <div>
+            <div class="option-title">Vida Profissional</div>
+            <div class="option-desc">Produtividade, liderança, comunicação e resultados</div>
+          </div>
+        </div>
+        <div class="option-card" onclick="selectOption(this, 'foco')" data-val="ambos">
+          <span class="option-icon">⚡</span>
+          <div>
+            <div class="option-title">Os dois!</div>
+            <div class="option-desc">Quero dominar IA na vida toda — pessoal e profissional</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-next" onclick="nextObStep()">Próximo →</button>
+        </div>
+      </div>
+
+      <!-- Step 1: Nicho -->
+      <div class="onboard-step" id="ob-step-1">
+        <div class="onboard-emoji">🔍</div>
+        <h2 class="onboard-title">Seus temas favoritos?</h2>
+        <p class="onboard-sub">Escolha até 2. A Aria vai trazer exemplos do que você gosta.</p>
+
+        <div class="chips-wrap" id="chips-nicho">
+          <span class="chip" onclick="toggleChipOb(this)">Liderança</span>
+          <span class="chip" onclick="toggleChipOb(this)">Produtividade</span>
+          <span class="chip" onclick="toggleChipOb(this)">Marketing</span>
+          <span class="chip" onclick="toggleChipOb(this)">Finanças</span>
+          <span class="chip" onclick="toggleChipOb(this)">Saúde</span>
+          <span class="chip" onclick="toggleChipOb(this)">Família</span>
+          <span class="chip" onclick="toggleChipOb(this)">Vendas</span>
+          <span class="chip" onclick="toggleChipOb(this)">Educação</span>
+        </div>
+
+        <div class="btn-row mt-8">
+          <button class="btn-secondary" onclick="prevObStep()">← Voltar</button>
+          <button class="btn-next" onclick="nextObStep()">Próximo →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Ritmo -->
+      <div class="onboard-step" id="ob-step-2">
+        <div class="onboard-emoji">🏃</div>
+        <h2 class="onboard-title">Seu ritmo de aprendizado?</h2>
+        <p class="onboard-sub">Você pode mudar isso a qualquer momento conversando com a Aria.</p>
+
+        <div class="option-card" onclick="selectOption(this, 'ritmo')" data-val="leve">
+          <span class="option-icon">🌿</span>
+          <div>
+            <div class="option-title">Leve e consistente</div>
+            <div class="option-desc">Cada coisa no seu tempo, sem pressão</div>
+          </div>
+        </div>
+        <div class="option-card" onclick="selectOption(this, 'ritmo')" data-val="equilibrado">
+          <span class="option-icon">⚖️</span>
+          <div>
+            <div class="option-title">Equilibrado</div>
+            <div class="option-desc">Quero aprender bem, com profundidade</div>
+          </div>
+        </div>
+        <div class="option-card" onclick="selectOption(this, 'ritmo')" data-val="intenso">
+          <span class="option-icon">🔥</span>
+          <div>
+            <div class="option-title">Intenso e rápido</div>
+            <div class="option-desc">Vou no máximo — quero dominar logo!</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="prevObStep()">← Voltar</button>
+          <button class="btn-next" onclick="startApp()">Começar! 🚀</button>
+        </div>
+
+        <!-- AVISO ÉTICO -->
+        <div style="
+          margin-top: 28px;
+          background: rgba(0,196,160,0.06);
+          border: 1px solid rgba(0,196,160,0.2);
+          border-radius: 14px;
+          padding: 20px 24px;
+          text-align: center;
+        ">
+          <div style="font-size: 1.4rem; margin-bottom: 8px;">💚</div>
+          <p style="color: #ffffff; font-size: 0.95rem; font-weight: 600; margin-bottom: 6px;">
+            Os 3 primeiros níveis são totalmente gratuitos.
+          </p>
+          <p style="color: #aaaaaa; font-size: 0.85rem; line-height: 1.6;">
+            A partir do Nível 4, pedimos uma <strong style="color:#00c4a0;">contribuição simbólica</strong> de R$27 
+            para manter o serviço ativo e continuar entregando conteúdo de qualidade.<br>
+            É um valor social — não é obrigação, é reconhecimento. 🙏
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TELA DO PROBLEMA REAL
+══════════════════════════════════════════ -->
+<div id="problema" class="screen">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg);">
+    <div style="max-width:520px;width:100%;">
+
+      <div style="text-align:center;margin-bottom:32px;">
+        <div style="font-size:2.5rem;margin-bottom:12px;">🎯</div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:10px;">
+          Qual é o seu desafio real?
+        </h2>
+        <p style="color:#aaaaaa;font-size:0.95rem;line-height:1.6;">
+          Quanto mais específico você for, mais a Aria vai personalizar o treinamento para <strong style="color:#fff;">a sua realidade</strong> — não para um exemplo genérico.
+        </p>
+      </div>
+
+      <div style="background:#0d1420;border:1px solid #1a1f2e;border-radius:16px;padding:28px;">
+        
+        <label style="display:block;color:#fff;font-weight:600;font-size:0.95rem;margin-bottom:10px;">
+          Qual é o maior desafio ou tarefa repetitiva no seu dia a dia que você gostaria de resolver com IA?
+        </label>
+        <textarea id="problema-texto" 
+          placeholder="Ex: Respondo mais de 50 emails por dia e perco muito tempo. Gostaria de usar IA para redigir respostas mais rápido sem perder o tom profissional..."
+          style="width:100%;background:#080b12;border:1px solid #1a1f2e;border-radius:10px;
+            color:#fff;padding:14px;font-size:0.9rem;font-family:'DM Sans',sans-serif;
+            resize:vertical;min-height:120px;outline:none;line-height:1.6;"
+          oninput="this.style.borderColor='#00c4a0'"></textarea>
+
+        <label style="display:block;color:#fff;font-weight:600;font-size:0.95rem;margin-top:20px;margin-bottom:10px;">
+          Qual resultado concreto você quer alcançar?
+        </label>
+        <textarea id="problema-resultado"
+          placeholder="Ex: Quero reduzir de 2h para 30min o tempo gasto com emails por dia..."
+          style="width:100%;background:#080b12;border:1px solid #1a1f2e;border-radius:10px;
+            color:#fff;padding:14px;font-size:0.9rem;font-family:'DM Sans',sans-serif;
+            resize:vertical;min-height:80px;outline:none;line-height:1.6;"
+          oninput="this.style.borderColor='#7c6fef'"></textarea>
+
+        <p style="color:#666;font-size:0.8rem;margin-top:12px;line-height:1.5;">
+          💡 Quanto mais específico você for, mais personalizado será o seu treinamento.
+        </p>
+
+        <button onclick="submitProblema()" style="
+          width:100%;margin-top:20px;
+          background:linear-gradient(90deg,#00c4a0,#7c6fef);
+          color:#fff;border:none;padding:16px;border-radius:10px;
+          font-weight:700;font-size:1rem;cursor:pointer;
+          font-family:'DM Sans',sans-serif;">
+          Aria, me ensina a resolver isso →
+        </button>
+
+        <button onclick="skipProblema()" style="
+          display:block;width:100%;margin-top:10px;
+          background:none;border:none;color:#666;
+          font-size:0.85rem;cursor:pointer;padding:8px;
+          font-family:'DM Sans',sans-serif;">
+          Pular por agora →
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════ -->
+<div id="app" class="screen">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="aria-avatar">🤖</div>
+      <div>
+        <div class="aria-name">Aria</div>
+        <div class="aria-status"><span class="status-dot"></span>Tutora de IA</div>
+      </div>
+    </div>
+
+    <div class="level-bar">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button onclick="openModal('modal-invite')" style="background:none;border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--text2);font-size:0.75rem;cursor:pointer;">📩 Indicar</button>
+        <button onclick="openModal('modal-galeria')" style="background:none;border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--text2);font-size:0.75rem;cursor:pointer;">💡 Galeria</button>
+        <button onclick="openModal('modal-acessibilidade')" style="background:none;border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--text2);font-size:0.75rem;cursor:pointer;">⚙️</button>
+        <button onclick="openModal('modal-creator')" style="background:none;border:none;cursor:pointer;padding:0;">
+          <img src="data:image/jpeg;base64,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" 
+               id="creator-av-app" alt="Arthur" style="width:28px;height:28px;border-radius:50%;border:1px solid var(--teal);">
+        </button>
+      </div>
+      <div>
+        <div class="level-badge" id="level-badge">N1</div>
+        <div class="xp-wrap">
+          <div class="xp-label"><span id="xp-current">0</span> / <span id="xp-max">100</span> XP</div>
+          <div class="xp-track"><div class="xp-fill" id="xp-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IA integrada via Gemini — sem configuração necessária -->
+
+  <!-- MESSAGES -->
+  <div class="messages" id="messages"></div>
+
+  <!-- QUICK REPLIES -->
+  <div class="quick-replies" id="quick-replies"></div>
+
+  <!-- WHATSAPP BANNER -->
+  <div class="wa-banner" id="wa-banner" onclick="window.open('https://chat.whatsapp.com/GcnYSlUkcE0K3utFJgx9nz','_blank')">
+    <span class="wa-icon">💬</span>
+    <div class="wa-info">
+      <div class="wa-title">ImpulsionAI — Comunidade de Líderes</div>
+      <div class="wa-sub">+213 líderes usando IA na prática. Junte-se gratuitamente!</div>
+    </div>
+    <span class="wa-close" onclick="event.stopPropagation();document.getElementById('wa-banner').style.display='none'">✕</span>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-area">
+    <div class="input-row">
+      <textarea class="chat-input" id="chat-input" rows="1" 
+        placeholder="Digite sua mensagem para a Aria..."
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"></textarea>
+      <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════ -->
+
+<!-- CREATOR MODAL -->
+<div class="modal-overlay" id="modal-creator">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Conheça o criador</div>
+      <button class="modal-close" onclick="closeModal('modal-creator')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="creator-header">
+        <img src="data:image/jpeg;base64,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"
+             alt="Arthur Alvarez" class="creator-photo" id="creator-photo-modal">
+        <div class="creator-info-text">
+          <div class="creator-name">Arthur Alvarez</div>
+          <div class="creator-role">Especialista em Neuroliderança & IA</div>
+        </div>
+      </div>
+
+      <p class="creator-bio">
+        Especialista em liderança consciente, neuroliderança e uso estratégico de tecnologias emergentes. 
+        Criador da metodologia <strong style="color:var(--text)">Tríade da Nova Liderança</strong>, que integra 
+        inteligência humana e artificial para líderes de alto impacto.
+      </p>
+
+      <div class="creator-links">
+        <a class="creator-link" href="https://www.linkedin.com/in/arthuralvarezbr/" target="_blank">
+          <span class="creator-link-icon">💼</span>
+          LinkedIn — arthuralvarezbr
+        </a>
+        <a class="creator-link" href="https://www.instagram.com/arthur.neurolideranca" target="_blank">
+          <span class="creator-link-icon">📸</span>
+          Instagram — @arthur.neurolideranca
+        </a>
+      </div>
+
+      <div class="triade-section">
+        <div class="triade-title">🔺 Tríade da Nova Liderança</div>
+        <div class="pillar">
+          <span class="pillar-num p1">1</span>
+          Autoconhecimento e Presença
+        </div>
+        <div class="pillar">
+          <span class="pillar-num p2">2</span>
+          Comunicação de Alto Impacto
+        </div>
+        <div class="pillar active-pillar">
+          <span class="pillar-num p3">3</span>
+          <strong>Uso de Tecnologias Emergentes ← você está aqui</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL UP MODAL -->
+<div class="modal-overlay" id="modal-levelup">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">🎉 Nível desbloqueado!</div>
+      <button class="modal-close" onclick="closeModal('modal-levelup')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="levelup-content">
+        <span class="levelup-emoji" id="lu-emoji">🚀</span>
+        <div class="levelup-title">Nível <span id="lu-level">2</span> desbloqueado!</div>
+        <p class="levelup-sub" id="lu-desc">Você dominou os primeiros passos com IA. Continue assim!</p>
+        <div class="levelup-stats">
+          <div class="stat-card">
+            <div class="stat-value" id="lu-xp">+50</div>
+            <div class="stat-label">XP Ganho</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="lu-total">150</div>
+            <div class="stat-label">XP Total</div>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="closeModal('modal-levelup')">Continuar jornada 🚀</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INVITE MODAL -->
+<div class="modal-overlay" id="modal-invite">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">📩 Indicar amigos</div>
+      <button class="modal-close" onclick="closeModal('modal-invite')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text2);font-size:0.88rem;margin-bottom:1rem;line-height:1.6;">
+        Indique até 3 amigos. Para cada um que se juntar, você ganha <strong style="color:var(--gold)">+50 XP</strong> 🎁
+      </p>
+
+      <div id="invite-fields">
+        <div class="invite-row">
+          <input type="text" class="invite-input" placeholder="Nome ou WhatsApp do amigo 1">
+        </div>
+        <div class="invite-row">
+          <input type="text" class="invite-input" placeholder="Nome ou WhatsApp do amigo 2">
+        </div>
+        <div class="invite-row">
+          <input type="text" class="invite-input" placeholder="Nome ou WhatsApp do amigo 3">
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="sendInvites()" style="margin-top:1rem;">
+        Enviar indicações 🎉
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL ACESSIBILIDADE -->
+<div class="modal-overlay" id="modal-acessibilidade">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">⚙️ Acessibilidade</div>
+      <button class="modal-close" onclick="closeModal('modal-acessibilidade')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <p style="color:var(--text2);font-size:0.85rem;margin-bottom:1.2rem;">
+        Personalize a leitura do app do jeito que fica mais confortável para você.
+      </p>
+
+      <!-- TAMANHO DA FONTE -->
+      <div style="margin-bottom:1.4rem;">
+        <div style="color:var(--text);font-weight:600;font-size:0.9rem;margin-bottom:10px;">📝 Tamanho do texto</div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="setFontSize('pequeno')" id="fs-pequeno"
+            style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);
+              background:var(--surface);color:var(--text2);cursor:pointer;font-size:0.8rem;font-family:'DM Sans',sans-serif;">
+            A<br><span style="font-size:0.7rem;color:var(--text2)">Pequeno</span>
+          </button>
+          <button onclick="setFontSize('normal')" id="fs-normal"
+            style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--teal);
+              background:var(--surface);color:var(--teal);cursor:pointer;font-size:1rem;font-family:'DM Sans',sans-serif;">
+            A<br><span style="font-size:0.75rem;">Normal</span>
+          </button>
+          <button onclick="setFontSize('grande')" id="fs-grande"
+            style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);
+              background:var(--surface);color:var(--text2);cursor:pointer;font-size:1.2rem;font-family:'DM Sans',sans-serif;">
+            A<br><span style="font-size:0.8rem;color:var(--text2)">Grande</span>
+          </button>
+          <button onclick="setFontSize('extragrande')" id="fs-extragrande"
+            style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);
+              background:var(--surface);color:var(--text2);cursor:pointer;font-size:1.4rem;font-family:'DM Sans',sans-serif;">
+            A<br><span style="font-size:0.85rem;color:var(--text2)">Extra</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ALTO CONTRASTE -->
+      <div style="margin-bottom:1.4rem;">
+        <div style="color:var(--text);font-weight:600;font-size:0.9rem;margin-bottom:10px;">🌗 Contraste</div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="setContrast(false)" id="ct-normal"
+            style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--teal);
+              background:#0d1420;color:var(--teal);cursor:pointer;font-size:0.85rem;font-family:'DM Sans',sans-serif;">
+            Normal
+          </button>
+          <button onclick="setContrast(true)" id="ct-alto"
+            style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);
+              background:#000;color:#fff;cursor:pointer;font-size:0.85rem;font-family:'DM Sans',sans-serif;">
+            Alto Contraste
+          </button>
+        </div>
+      </div>
+
+      <!-- RITMO DA ARIA -->
+      <div style="margin-bottom:1rem;">
+        <div style="color:var(--text);font-weight:600;font-size:0.9rem;margin-bottom:10px;">🐢 Ritmo da Aria</div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="setRitmoAria('pausado')" id="ra-pausado"
+            style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);
+              background:var(--surface);color:var(--text2);cursor:pointer;font-size:0.8rem;font-family:'DM Sans',sans-serif;">
+            🐢<br><span style="font-size:0.7rem;">Pausado</span>
+          </button>
+          <button onclick="setRitmoAria('normal')" id="ra-normal"
+            style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--teal);
+              background:var(--surface);color:var(--teal);cursor:pointer;font-size:0.8rem;font-family:'DM Sans',sans-serif;">
+            🚶<br><span style="font-size:0.7rem;">Normal</span>
+          </button>
+          <button onclick="setRitmoAria('rapido')" id="ra-rapido"
+            style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);
+              background:var(--surface);color:var(--text2);cursor:pointer;font-size:0.8rem;font-family:'DM Sans',sans-serif;">
+            🏃<br><span style="font-size:0.7rem;">Rápido</span>
+          </button>
+        </div>
+        <p style="color:var(--text2);font-size:0.75rem;margin-top:8px;line-height:1.5;">
+          "Pausado" faz a Aria explicar em partes menores com mais pausas entre os conceitos.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL GALERIA DE PROMPTS -->
+<div class="modal-overlay" id="modal-galeria">
+  <div class="modal" style="max-width:580px;">
+    <div class="modal-head">
+      <div class="modal-title">💡 Galeria de Prompts</div>
+      <button class="modal-close" onclick="closeModal('modal-galeria')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <p style="color:var(--text2);font-size:0.85rem;margin-bottom:1rem;line-height:1.6;">
+        Prompts criados por alunos do IAprender. Inspire-se e compartilhe os seus!
+      </p>
+
+      <!-- TABS -->
+      <div style="display:flex;gap:6px;margin-bottom:1.2rem;border-bottom:1px solid var(--border);padding-bottom:10px;">
+        <button onclick="showGaleriaTab('ver')" id="gtab-ver"
+          style="padding:6px 14px;border-radius:6px;border:none;background:var(--teal);
+            color:#080b12;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;">
+          Ver prompts
+        </button>
+        <button onclick="showGaleriaTab('compartilhar')" id="gtab-compartilhar"
+          style="padding:6px 14px;border-radius:6px;border:1px solid var(--border);
+            background:none;color:var(--text2);font-size:0.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;">
+          Compartilhar o meu
+        </button>
+      </div>
+
+      <!-- TAB: VER PROMPTS -->
+      <div id="gtab-content-ver">
+        <div id="galeria-lista" style="display:flex;flex-direction:column;gap:10px;max-height:400px;overflow-y:auto;">
+          <!-- Prompts carregados via JS -->
+          <div style="text-align:center;color:var(--text2);padding:20px;font-size:0.85rem;">
+            Carregando prompts da comunidade... ✨
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: COMPARTILHAR -->
+      <div id="gtab-content-compartilhar" style="display:none;">
+        <div style="margin-bottom:12px;">
+          <label style="display:block;color:var(--text);font-size:0.85rem;font-weight:600;margin-bottom:6px;">
+            Título do seu prompt
+          </label>
+          <input id="galeria-titulo" type="text" placeholder="Ex: Prompt para feedback de equipe"
+            style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;
+              color:var(--text);padding:10px 12px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none;">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block;color:var(--text);font-size:0.85rem;font-weight:600;margin-bottom:6px;">
+            O prompt completo
+          </label>
+          <textarea id="galeria-prompt" rows="5" placeholder="Cole ou escreva seu melhor prompt aqui..."
+            style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;
+              color:var(--text);padding:10px 12px;font-size:0.85rem;font-family:'DM Sans',sans-serif;
+              outline:none;resize:vertical;line-height:1.6;"></textarea>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block;color:var(--text);font-size:0.85rem;font-weight:600;margin-bottom:6px;">
+            Para qual situação serve?
+          </label>
+          <select id="galeria-categoria"
+            style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;
+              color:var(--text);padding:10px 12px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none;">
+            <option value="">Selecione...</option>
+            <option value="email">📧 Email profissional</option>
+            <option value="feedback">💬 Feedback de equipe</option>
+            <option value="decisao">♟️ Tomada de decisão</option>
+            <option value="relatorio">📊 Relatório / Apresentação</option>
+            <option value="criativo">✨ Criação de conteúdo</option>
+            <option value="gestao">👥 Gestão de pessoas</option>
+            <option value="outro">🔧 Outro</option>
+          </select>
+        </div>
+        <button onclick="compartilharPrompt()" style="
+          width:100%;background:linear-gradient(90deg,#00c4a0,#7c6fef);
+          color:#fff;border:none;padding:12px;border-radius:8px;
+          font-weight:700;font-size:0.9rem;cursor:pointer;font-family:'DM Sans',sans-serif;">
+          Compartilhar na galeria 🚀
+        </button>
+        <p style="color:var(--text2);font-size:0.75rem;margin-top:8px;text-align:center;">
+          Seu nome aparece como iniciais. Ex: "A.A." — nunca o nome completo.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONFETTI CONTAINER -->
+<div class="confetti-container" id="confetti"></div>
+
+<script>
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+const state = {
+  nome: '',
+  whats: '',
+  email: '',
+  idade: '',
+  situacao: '',
+  area: '',
+  foco: '',
+  nichos: [],
+  ritmo: '',
+  pais: '',
+  estado: '',
+  cidade: '',
+  level: 1,
+  xp: 0,
+  xpMax: 100,
+  interactions: 0,
+  waShown: false,
+  apiKey: '',
+  dailyRequests: 0,
+  dailyRequestsDate: '',
+  dailyLimit: 1000,
+  conversationHistory: [],
+  currentLessonStep: 0,
+  geoStep: false,
+  problemaReal: '',
+  resultadoDesejado: '',
+  fontSize: 'normal',
+  highContrast: false,
+  ritmoAria: 'normal',
+};
+
+const ARTHUR_PHOTO = 'data:image/jpeg;base64,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';
+
+
+// ══════════════════════════════════════════
+// PERSISTÊNCIA — localStorage
+// ══════════════════════════════════════════
+function saveProgress() {
+  try {
+    const toSave = {
+      nome: state.nome, whats: state.whats, email: state.email,
+      idade: state.idade, situacao: state.situacao, area: state.area,
+      level: state.level, xp: state.xp, interactions: state.interactions,
+      conversationHistory: state.conversationHistory.slice(-20),
+      apiKey: state.apiKey,
+      interacoesNoNivel: state.interacoesNoNivel || 0,
+      fontSize: state.fontSize || 'normal',
+      highContrast: state.highContrast || false,
+      ritmoAria: state.ritmoAria || 'normal',
+      problemaReal: state.problemaReal || '',
+      resultadoDesejado: state.resultadoDesejado || '',
+    };
+    localStorage.setItem('iaprender_progress', JSON.stringify(toSave));
+  } catch(e) {}
+}
+
+function loadProgress() {
+  try {
+    const saved = localStorage.getItem('iaprender_progress');
+    if (!saved) return false;
+    const data = JSON.parse(saved);
+    if (!data.nome) return false;
+    Object.assign(state, data);
+    return true;
+  } catch(e) { return false; }
+}
+
+// XP thresholds per level
+const XP_THRESHOLDS = [0, 300, 600, 1000, 1500, 2100, 2800, 3600];
+let _levelingUp = false;
+
+
+// ══════════════════════════════════════════
+// CURRÍCULO FIXO — 6 PASSOS POR NÍVEL
+// ══════════════════════════════════════════
+const CURRICULUM = {
+  1: {
+    tema: 'O que é IA',
+    passos: [
+      // PASSO 1 — CONCEITO
+      {
+        tipo: 'conceito',
+        aria: (s) => `${s && s.nome ? s.nome.split(' ')[0] : 'você'}, vamos começar pelo básico — e o básico é mais simples do que parece.
+
+IA não é robô, não é mágica e não pensa como humano. É um sistema que aprendeu a reconhecer padrões em bilhões de textos. Quando você escreve algo, ela busca o padrão mais provável de resposta.
+
+Analogia direta: é como um estagiário muito veloz que leu tudo que existe na internet — mas precisa de instruções claras para entregar algo útil.
+
+A instrução que você dá para a IA tem um nome: **prompt**.
+
+Pergunta rápida: quando você pede algo para alguém no trabalho, você costuma ser direto e específico, ou faz perguntas abertas?`,
+        quickReplies: ['Costumo ser direto e específico', 'Depende da situação', 'Faço perguntas abertas'],
+        xp: 10
+      },
+      // PASSO 2 — EXEMPLO RUIM
+      {
+        tipo: 'exemplo_ruim',
+        aria: (s) => {
+          const area = (s && s.area) ? s.area : 'seu trabalho';
+          return `Certo. Agora veja este prompt que alguém na área de ${area} mandou para uma IA:
+
+---
+*"Me ajuda com comunicação."*
+---
+
+A IA recebeu isso e não sabia: comunicação com quem? Para quê? Que tipo de ajuda? Resultado: resposta genérica, inútil.
+
+O que está faltando nesse prompt?`;
+        },
+        quickReplies: ['Falta dizer o que quer exatamente', 'Falta contexto — quem é, qual situação', 'Falta tudo — é vago demais'],
+        xp: 15
+      },
+      // PASSO 3 — EXEMPLO BOM
+      {
+        tipo: 'exemplo_bom',
+        aria: (s) => {
+          const area = (s && s.area) ? s.area : 'liderança';
+          return `Exato. Agora veja o mesmo pedido reescrito:
+
+---
+*"Sou gerente de ${area} e preciso dar um feedback difícil para um colaborador que chegou atrasado 3 vezes esta semana. Escreva um roteiro de conversa direto, sem rodeios, em tom profissional."*
+---
+
+Diferença: contexto (quem sou, qual situação) + tarefa específica (roteiro de conversa) + formato (direto, profissional).
+
+A IA agora tem tudo que precisa. O resultado vai ser 10x melhor.
+
+Isso tem um nome: fórmula **CTF — Contexto, Tarefa, Formato**. Você vai dominar isso no próximo nível.
+
+Por enquanto: faz sentido a diferença entre os dois prompts?`;
+        },
+        quickReplies: ['Sim, ficou claro', 'Mais ou menos — tenho dúvida', 'Entendi, quero praticar'],
+        xp: 15
+      },
+      // PASSO 4 — EXERCÍCIO
+      {
+        tipo: 'exercicio',
+        aria: (s) => {
+          const area = (s && s.area) ? s.area : 'seu trabalho';
+          const problema = (s && s.problemaReal) ? `Você mencionou: "${s.problemaReal.substring(0,60)}..."` : '';
+          return `Agora é sua vez.
+
+${problema}
+
+Escreva um prompt pedindo ajuda para a IA com algo real do seu dia a dia em ${area}. Pode ser simples — não precisa ser perfeito ainda.
+
+Digite seu prompt abaixo:`;
+        },
+        quickReplies: [],
+        xp: 20,
+        aguardaTextoLivre: true
+      },
+      // PASSO 5 — AVALIAÇÃO (IA ou checklist)
+      {
+        tipo: 'avaliacao',
+        aria: null, // gerado dinamicamente
+        quickReplies: ['Entendi, vou reescrever', 'Tenho uma dúvida antes'],
+        xp: 25,
+        aguardaTextoLivre: false
+      },
+      // PASSO 6 — DESAFIO FINAL
+      {
+        tipo: 'desafio',
+        aria: (s) => `Último passo do Nível 1.
+
+Reescreva seu prompt incluindo pelo menos **duas** dessas melhorias:
+- Quem você é (cargo, contexto)
+- O que quer exatamente (ação específica)
+- Como quer a resposta (formato, tom, tamanho)
+
+Se passar, você sobe para o Nível 2. Pode enviar:`,
+        quickReplies: [],
+        xp: 30,
+        aguardaTextoLivre: true,
+        ehDesafioFinal: true
+      }
+    ]
+  },
+  2: {
+    tema: 'Fórmula CTF',
+    passos: [
+      {
+        tipo: 'conceito',
+        aria: (s) => `${s && s.nome ? s.nome.split(' ')[0] : 'você'}, no nível anterior você viu a diferença entre um prompt vago e um específico.
+
+Agora vamos dar nome aos elementos. A fórmula **CTF** é a base de qualquer prompt que funciona:
+
+**C — Contexto:** quem você é, qual é a situação, para quem é o resultado
+**T — Tarefa:** o que exatamente você quer que a IA faça (use verbos: escreva, analise, liste, compare, resuma)
+**F — Formato:** como quer a resposta (email, lista, 3 tópicos, tabela, parágrafo curto)
+
+Sem CTF, a IA chuta. Com CTF, ela acerta.
+
+Você já usou IA com algum desses elementos sem saber que tinha nome?`,
+        quickReplies: ['Sim, dava contexto às vezes', 'Não, mandava perguntas diretas', 'Nunca tinha pensado nisso'],
+        xp: 10
+      },
+      {
+        tipo: 'exemplo_ruim',
+        aria: (s) => `Veja este prompt sem CTF:
+
+---
+*"Escreve um email para meu cliente."*
+---
+
+A IA não sabe: qual cliente? Qual assunto? Tom formal ou informal? Curto ou longo? Qual objetivo do email?
+
+Resultado garantido: email genérico que você vai jogar fora.
+
+O que falta nos três elementos — C, T e F?`,
+        quickReplies: ['Falta contexto — quem é o cliente, qual situação', 'Falta tarefa — o que o email deve fazer', 'Faltam os três'],
+        xp: 15
+      },
+      {
+        tipo: 'exemplo_bom',
+        aria: (s) => `Com CTF completo:
+
+---
+**C:** *"Sou consultor de RH e atendo uma empresa de 50 pessoas. Tive uma reunião com o dono ontem sobre turnover alto."*
+**T:** *"Escreva um email de follow-up resumindo os 3 principais pontos discutidos e propondo uma próxima reunião."*
+**F:** *"Tom profissional mas direto. Máximo 150 palavras."*
+---
+
+A IA agora entrega exatamente o que você precisa — sem precisar reescrever.
+
+Diferença: o prompt sem CTF tem 7 palavras. O com CTF tem 50. Mas o resultado é 10x melhor.
+
+Qual parte do CTF você acha mais difícil de aplicar?`,
+        quickReplies: ['O Contexto — não sei o que incluir', 'A Tarefa — fico vago no verbo', 'O Formato — não penso nisso'],
+        xp: 15
+      },
+      {
+        tipo: 'exercicio',
+        aria: (s) => {
+          const area = (s && s.area) ? s.area : 'seu trabalho';
+          return `Agora monte um prompt CTF completo para uma situação real em ${area}.
+
+Use essa estrutura:
+**C:** (quem você é + situação)
+**T:** (o que a IA deve fazer — verbo claro)
+**F:** (como quer a resposta)
+
+Digite seu prompt CTF:`;
+        },
+        quickReplies: [],
+        xp: 20,
+        aguardaTextoLivre: true
+      },
+      {
+        tipo: 'avaliacao',
+        aria: null,
+        quickReplies: ['Entendi, vou ajustar', 'Posso tentar de novo?'],
+        xp: 25,
+        aguardaTextoLivre: false
+      },
+      {
+        tipo: 'desafio',
+        aria: (s) => `Desafio final do Nível 2.
+
+Escreva um prompt CTF para resolver algo do seu trabalho real — pode ser o desafio que você mencionou no início.
+
+Critério para avançar: o prompt precisa ter contexto claro, verbo de ação específico e formato definido.
+
+Envie seu melhor prompt CTF:`,
+        quickReplies: [],
+        xp: 30,
+        aguardaTextoLivre: true,
+        ehDesafioFinal: true
+      }
+    ]
+  },
+  3: {
+    tema: 'Tom e Voz',
+    passos: [
+      {
+        tipo: 'conceito',
+        aria: (s) => `${s && s.nome ? s.nome.split(' ')[0] : 'você'}, você já sabe fazer um prompt que funciona. Agora vamos um nível acima.
+
+A mesma instrução, com tons diferentes, gera resultados completamente diferentes.
+
+Tom é como você quer que a IA "fale" na resposta. Exemplos:
+- **Formal:** relatórios, emails corporativos, documentos oficiais
+- **Direto:** decisões rápidas, listas de ação, briefings
+- **Empático:** feedbacks, comunicados difíceis, mensagens delicadas
+- **Persuasivo:** propostas, apresentações, argumentos
+
+Você não precisa escolher um tom fixo — pode misturar. *"Tom direto mas respeitoso"* é uma instrução válida.
+
+No seu trabalho, qual tom você mais precisa usar?`,
+        quickReplies: ['Formal — documentos e relatórios', 'Direto — decisões e ações', 'Empático — pessoas e feedbacks', 'Persuasivo — vendas e propostas'],
+        xp: 10
+      },
+      {
+        tipo: 'exemplo_ruim',
+        aria: (s) => `Prompt sem definição de tom:
+
+---
+*"Escreva um comunicado informando que haverá demissões na empresa."*
+---
+
+A IA não sabe: é para os funcionários? Para a diretoria? É para minimizar impacto ou ser transparente? Deve ser frio ou humano?
+
+Resultado: texto genérico que pode ofender, assustar ou passar mensagem errada.
+
+O que você mudaria primeiro?`,
+        quickReplies: ['Definiria o público — para quem é', 'Definiria o tom — empático ou direto', 'Adicionaria contexto — por que as demissões'],
+        xp: 15
+      },
+      {
+        tipo: 'exemplo_bom',
+        aria: (s) => `Com tom definido:
+
+---
+*"Sou diretora de RH de uma empresa de tecnologia. Preciso comunicar uma reestruturação que afetará 10% do time. Escreva um comunicado interno em tom humano e transparente, que reconheça o impacto emocional, explique os motivos sem jargão corporativo e indique os próximos passos. Máximo 200 palavras."*
+---
+
+Resultado completamente diferente. O tom *"humano e transparente"* mudou tudo.
+
+Perceba: você não escreveu o comunicado — você instruiu a IA a escrever do jeito certo.
+
+Isso é o que separa quem usa IA de quem domina IA.`,
+        quickReplies: ['Entendi — o tom muda tudo', 'Como defino tom para área técnica?', 'Quero praticar isso'],
+        xp: 15
+      },
+      {
+        tipo: 'exercicio',
+        aria: (s) => {
+          const area = (s && s.area) ? s.area : 'seu trabalho';
+          return `Pegue um prompt que você já escreveu antes — ou crie um novo — e adicione uma instrução de tom.
+
+Situação: algo que você precisa comunicar ou escrever em ${area}.
+
+Inclua no prompt: **para quem é** + **qual tom** + **o que não pode parecer**.
+
+Digite:`;
+        },
+        quickReplies: [],
+        xp: 20,
+        aguardaTextoLivre: true
+      },
+      {
+        tipo: 'avaliacao',
+        aria: null,
+        quickReplies: ['Vou ajustar o tom', 'Não entendi o feedback'],
+        xp: 25,
+        aguardaTextoLivre: false
+      },
+      {
+        tipo: 'desafio',
+        aria: (s) => `Desafio final do Nível 3.
+
+Escreva um prompt completo — CTF + tom definido — para uma comunicação real que você precisa fazer no trabalho.
+
+Critério: o prompt precisa ter tom explícito E dizer o que a resposta NÃO deve parecer.
+
+Exemplo de como definir: *"Tom direto mas não agressivo, profissional mas não distante."*
+
+Envie:`,
+        quickReplies: [],
+        xp: 30,
+        aguardaTextoLivre: true,
+        ehDesafioFinal: true
+      }
+    ]
+  }
+};
+
+// Estado do currículo
+let currState = {
+  passo: 0,         // 0-5
+  aguardandoPrompt: false,
+  ultimoPromptAluno: '',
+  desafioTentativas: 0
+};
+
+function getCurrPasso() {
+  const nivel = state ? state.level : 1;
+  const curr = CURRICULUM[nivel];
+  if (!curr) return null;  // levels 4-7 handled by Gemini
+  return curr.passos[currState.passo] || null;
+}
+
+function nextCurrPasso() {
+  const nivel = state ? state.level : 1;
+  const curr = CURRICULUM[nivel];
+  if (!curr) return;
+  if (currState.passo < curr.passos.length - 1) {
+    currState.passo++;
+  }
+}
+
+function resetCurrForLevel() {
+  currState.passo = 0;
+  currState.aguardandoPrompt = false;
+  currState.ultimoPromptAluno = '';
+  currState.desafioTentativas = 0;
+}
+
+function avaliarPromptChecklist(prompt) {
+  const p = prompt.toLowerCase();
+  const temContexto = p.length > 30 && (
+    p.includes('sou ') || p.includes('trabalho') || p.includes('empresa') ||
+    p.includes('equipe') || p.includes('cliente') || p.includes('situação') ||
+    p.includes('contexto') || p.includes('área')
+  );
+  const temTarefa = (
+    p.includes('escreva') || p.includes('liste') || p.includes('analise') ||
+    p.includes('crie') || p.includes('faça') || p.includes('resuma') ||
+    p.includes('compare') || p.includes('explique') || p.includes('sugira') ||
+    p.includes('monte') || p.includes('elabore') || p.includes('desenvolva')
+  );
+  const temFormato = (
+    p.includes('email') || p.includes('lista') || p.includes('tópico') ||
+    p.includes('parágrafo') || p.includes('tabela') || p.includes('curto') ||
+    p.includes('palavras') || p.includes('formal') || p.includes('tom') ||
+    p.includes('direto') || p.includes('resumido') || p.includes('detalhado')
+  );
+  const tamanhoOk = prompt.trim().split(' ').length >= 12;
+
+  return { temContexto, temTarefa, temFormato, tamanhoOk };
+}
+
+function gerarFeedbackChecklist(prompt, passo) {
+  const r = avaliarPromptChecklist(prompt);
+  const problemas = [];
+  const ok = [];
+
+  if (r.temContexto) ok.push('✓ Contexto presente');
+  else problemas.push('✗ Falta contexto — quem você é ou qual é a situação');
+
+  if (r.temTarefa) ok.push('✓ Tarefa clara');
+  else problemas.push('✗ Falta tarefa clara — use um verbo de ação (escreva, liste, analise...)');
+
+  if (r.temFormato) ok.push('✓ Formato ou tom definido');
+  else problemas.push('✗ Falta formato — como quer a resposta (email, lista, tom formal...)');
+
+  if (!r.tamanhoOk) problemas.push('✗ Muito curto — adicione mais detalhes');
+
+  const passou = r.tamanhoOk && problemas.length <= 1;
+
+  let feedback = '';
+  if (ok.length > 0) feedback += ok.join('\n') + '\n\n';
+  if (problemas.length > 0) feedback += problemas.join('\n');
+
+  return { feedback, passou };
+}
+
+async function processarPassoCurriculo(textoUsuario) {
+  const passo = getCurrPasso();
+  if (!passo) return false;
+
+  // Passo de exercício ou desafio — aguarda texto livre do aluno
+  if ((passo.tipo === 'exercicio' || passo.tipo === 'desafio') && passo.aguardaTextoLivre) {
+    if (!currState.aguardandoPrompt) {
+      // Mostra enunciado
+      currState.aguardandoPrompt = true;
+      if (passo.xp) addXp(passo.xp / 2);
+      const msg = typeof passo.aria === 'function' ? passo.aria(state) : passo.aria;
+      addAriaMessage(msg);
+      setQuickReplies([]);
+      return true;
+    } else {
+      // Recebeu o prompt do aluno
+      currState.ultimoPromptAluno = textoUsuario;
+      currState.aguardandoPrompt = false;
+
+      if (passo.tipo === 'desafio') {
+        // Avalia com checklist
+        const { feedback, passou } = gerarFeedbackChecklist(textoUsuario, passo);
+        
+        if (passou) {
+          addXp(passo.xp);
+          currState.aguardandoPrompt = false;
+          currState.passo = 99; // mark level as fully completed
+          addAriaMessage(`${feedback}\n\nPrompt aprovado. Nível ${state.level} concluído.`);
+          // Force enough XP to trigger level up
+          const needed = XP_THRESHOLDS[state.level] || 300;
+          if (state.xp < needed) state.xp = needed;
+          updateXpBar();
+          setTimeout(() => checkLevelUp(), 800);
+        } else {
+          currState.desafioTentativas++;
+          if (currState.desafioTentativas >= 2) {
+            // Dica extra na segunda tentativa
+            addAriaMessage(`${feedback}\n\nDica: comece com "Sou [cargo/função] e preciso [ação específica]. Escreva [formato] em tom [tom]."\n\nTente novamente:`);
+          } else {
+            addAriaMessage(`${feedback}\n\nAjuste e envie novamente:`);
+          }
+          currState.aguardandoPrompt = true;
+        }
+        return true;
+      }
+
+      // Exercício — vai para passo de avaliação (processarAvaliacao faz nextCurrPasso internamente)
+      await processarAvaliacao(textoUsuario);
+      return true;
+    }
+  }
+
+  // Passo de avaliação
+  if (passo.tipo === 'avaliacao') {
+    await processarAvaliacao(currState.ultimoPromptAluno || textoUsuario);
+    return true;
+  }
+
+  // Passos narrativos (conceito, exemplo_ruim, exemplo_bom)
+  if (['conceito','exemplo_ruim','exemplo_bom'].includes(passo.tipo)) {
+    if (passo.xp) addXp(passo.xp);
+    nextCurrPasso();
+    const proximoPasso = getCurrPasso();
+    if (proximoPasso) {
+      setTimeout(() => {
+        const msg = typeof proximoPasso.aria === 'function' ? proximoPasso.aria(state) : proximoPasso.aria;
+        if (msg) addAriaMessage(msg);
+        const qr = proximoPasso.quickReplies || [];
+        if (qr.length > 0) setQuickReplies(qr);
+        else if (proximoPasso.aguardaTextoLivre) setQuickReplies([]);
+      }, 400);
+    }
+    return true;
+  }
+
+  return false;
+}
+
+async function processarAvaliacao(promptAluno) {
+  const { feedback, passou } = gerarFeedbackChecklist(promptAluno, 5);
+  
+  // Try Gemini first for richer feedback
+  if (state && state.apiKey) {
+    try {
+      const nivel = state.level;
+      const temaAtual = CURRICULUM[nivel] ? CURRICULUM[nivel].tema : 'prompts';
+      const avalMsg = await callGeminiAPI(
+        `Avalie este prompt escrito por um aluno aprendendo sobre "${temaAtual}":
+
+"${promptAluno}"
+
+Dê feedback em 3 linhas máximo:
+1. O que funcionou (seja específico)
+2. O que melhorar (seja direto, sem rodeios)
+3. Uma sugestão concreta de reescrita
+
+Tom: direto, sem elogios vazios, sem "parabéns" ou "ótimo trabalho".`
+      );
+      addXp(25);
+      addAriaMessage(avalMsg);
+      nextCurrPasso();
+      const proximo = getCurrPasso();
+      if (proximo) {
+        setTimeout(() => {
+          const msg = typeof proximo.aria === 'function' ? proximo.aria(state) : proximo.aria;
+          if (msg) addAriaMessage(msg);
+          setQuickReplies(proximo.quickReplies || []);
+        }, 500);
+      }
+      return;
+    } catch(e) {
+      // Fall through to checklist
+    }
+  }
+
+  // Fallback checklist
+  addXp(20);
+  addAriaMessage(feedback + (passou ? '\n\nSólido. Próximo passo:' : '\n\nAjuste esses pontos antes de continuar.'));
+  nextCurrPasso();
+  const proximo = getCurrPasso();
+  if (proximo) {
+    setTimeout(() => {
+      const msg = typeof proximo.aria === 'function' ? proximo.aria(state) : proximo.aria;
+      if (msg) addAriaMessage(msg);
+      setQuickReplies(proximo.quickReplies || []);
+    }, 500);
+  }
+}
+
+
+// Level info
+const LEVELS = [
+  null,
+  { name: 'N1 · Primeiros Passos', emoji: '🌱', xpNeeded: 100 },
+  { name: 'N2 · Prompts Básicos', emoji: '✍️', xpNeeded: 200 },
+  { name: 'N3 · Tom e Estilo', emoji: '🎨', xpNeeded: 350 },
+  { name: 'N4 · Comunicação', emoji: '📣', xpNeeded: 500 },
+  { name: 'N5 · Estratégia', emoji: '♟️', xpNeeded: 700 },
+  { name: 'N6 · Ferramentas', emoji: '🔧', xpNeeded: 900 },
+  { name: 'N7 · PACEF Master', emoji: '🏆', xpNeeded: 1100 },
+];
+
+// ── SYSTEM PROMPT ──
+function buildSystemPrompt() {
+  const nivelInfo = {
+    1: {
+      tema: 'O que é IA e como ela funciona',
+      objetivo: 'Fazer o usuário entender o que é IA, o que é prompt e como a IA processa linguagem natural — sem jargão técnico',
+      desafio: 'Criar o primeiro prompt do zero sobre algo real da vida do usuário e entender por que a IA respondeu daquele jeito',
+      conteudo: `Conceitos do nível:
+- IA é como um assistente que aprende por exemplos — não pensa, mas processa padrões de linguagem com muito poder
+- Prompt é a instrução que você dá para a IA — quanto mais clara, melhor a resposta
+- A IA não tem memória entre conversas: cada vez que começa, é uma folha em branco
+- "Lixo entra, lixo sai" — a qualidade da sua pergunta define a qualidade da resposta
+- A IA não erra de propósito: ela sempre tenta ajudar com o que entendeu
+
+Analogias que funcionam para este público:
+- IA é como um estagiário muito inteligente que precisa de instruções claras
+- Prompt é como uma receita: ingredientes certos = prato bom
+- Quanto mais contexto você dá, mais a IA acerta o tom`,
+    },
+    2: {
+      tema: 'A Fórmula CTF: Contexto + Tarefa + Formato',
+      objetivo: 'Ensinar a fórmula básica de um prompt eficaz com 3 elementos: contexto (quem sou, qual situação), tarefa (o que quero) e formato (como quero a resposta)',
+      desafio: 'Pegar um prompt vago que o usuário já usou antes e transformá-lo num prompt CTF poderoso — comparando as duas respostas',
+      conteudo: `Conceitos do nível:
+- CONTEXTO: diga para a IA quem você é, qual é a situação, quem vai ler
+- TAREFA: seja específico sobre o que quer — verbo de ação claro (escreva, analise, liste, resuma, compare)
+- FORMATO: diga como quer a resposta — email, lista, 3 tópicos, tabela, resposta em 2 parágrafos
+
+Antes e depois (exemplo real):
+- Prompt fraco: "Me ajuda a escrever um email"
+- Prompt CTF: "Contexto: sou gerente de RH. Preciso avisar minha equipe sobre mudança de horário. Tom: profissional mas amigável. Tarefa: escreva um email comunicando que o horário de trabalho muda de 9h para 8h a partir de segunda. Formato: máximo 3 parágrafos, sem jargão corporativo."
+
+Prática guiada:
+- Identifique os 3 elementos em prompts de exemplo
+- Melhore prompts fracos adicionando C, T e F
+- Crie um prompt CTF para uma situação real do trabalho do usuário`,
+    },
+    3: {
+      tema: 'Tom, voz e persona — a IA fala como você manda',
+      objetivo: 'Ensinar que a IA pode ser formal, informal, empática, direta, técnica ou simples — e que você controla isso com 2 palavras',
+      desafio: 'Criar o mesmo conteúdo em 3 tons diferentes para públicos diferentes (ex: email para chefe, para equipe, para cliente), e perceber a diferença',
+      conteudo: `Conceitos do nível:
+- Tom é o "jeito" da fala: formal, informal, empático, direto, motivador, técnico
+- Persona é quando você manda a IA "entrar em um papel": "você é um especialista em...", "você é um professor paciente..."
+- Público-alvo muda tudo: o mesmo conteúdo para um cliente novo é diferente do mesmo conteúdo para um colega de 10 anos
+
+Ferramentas práticas:
+- Adicione "Tom: [adjetivo]" no final do prompt
+- Use "Escreva para [público específico]"
+- Use "Você é um [papel] com experiência em [área]"
+
+Exemplos por área:
+- RH: "Tom: acolhedor e direto. Escreva para um colaborador em período de avaliação."
+- Saúde: "Tom: técnico mas humanizado. O leitor é paciente leigo."
+- Jurídico: "Tom: formal e preciso. O leitor é o juiz, não o cliente."
+- Vendas: "Tom: consultivo, sem pressão. O cliente está em fase de decisão."`,
+    },
+    4: {
+      tema: 'Comunicação de alto impacto com IA',
+      objetivo: 'Usar IA para criar emails, feedbacks, apresentações e mensagens difíceis com mais clareza, empatia e resultado',
+      desafio: 'Usar IA para criar uma comunicação real que o usuário precisa enviar esta semana — e comparar com o que escreveria sem IA',
+      conteudo: `Conceitos do nível:
+- A IA não substitui você — ela amplifica sua intenção quando você sabe comandar
+- Comunicações de alto impacto têm 3 elementos: clareza (o quê), empatia (quem recebe) e chamada para ação (o que vem depois)
+- Feedback com IA: use o modelo SCI — Situação, Comportamento, Impacto
+- Email difícil: use a estrutura "contexto → problema → pedido → próximo passo"
+
+Aplicações práticas guiadas:
+- Escrever feedback construtivo para um colaborador
+- Redigir um email de solicitação para alguém de posição superior
+- Criar uma mensagem de recusa sem queimar o relacionamento
+- Resumir uma reunião longa em 5 pontos de ação
+
+A Aria vai guiar o usuário para CONSTRUIR o prompt, não apenas receber o resultado pronto.`,
+    },
+    5: {
+      tema: 'Clareza, Prioridade e Ritual — a Arquitetura da Ação com IA',
+      objetivo: 'Usar IA junto com a Matriz de Eisenhower e o Método do Bloco Único para sair da paralisia e criar um ritmo de ação semanal sustentável',
+      desafio: 'Usar a IA para classificar as tarefas da semana na Matriz de Eisenhower, identificar o Bloco Único da semana e criar um ritual pessoal de 5 a 10 minutos',
+      conteudo: `CONTEÚDO DO NÍVEL 5 — baseado no livro "A Tríade da Nova Liderança" de Arthur Alvarez:
+
+OS 3 PILARES DA AÇÃO ESTRATÉGICA:
+1. CLAREZA — saber o quê. Sem visão cristalina do destino, qualquer ação vira agitação sem propósito.
+2. PRIORIDADE — saber o quando e o porquê. Em um mundo de infinitas demandas, escolher o que NÃO fazer é tão importante quanto o que fazer.
+3. RITUAL — saber como manter. A ação estratégica não é um evento isolado, é um hábito construído.
+
+FERRAMENTA 1 — MATRIZ DE EISENHOWER:
+Divide as tarefas em 4 quadrantes:
+- Q1: Urgente + Importante → FAÇA AGORA (crises, prazos reais)
+- Q2: Não urgente + Importante → AGENDE (planejamento, relacionamentos, desenvolvimento) ← onde vivem as pessoas de alto impacto
+- Q3: Urgente + Não importante → DELEGUE (interrupções, pedidos de outros)
+- Q4: Não urgente + Não importante → ELIMINE (distrações, procrastinação)
+
+Insight poderoso de Arthur Alvarez: "Urgente para quem? Urgente por quê? Urgente até quando? A maioria das urgências nasce de desorganização emocional, não de ameaças reais do mundo externo."
+
+FERRAMENTA 2 — MÉTODO DO BLOCO ÚNICO:
+Para quem se sente paralisado pelo tamanho dos objetivos:
+- 1 Objetivo Principal por semana (não 10, não 5 — UM)
+- 1 Ação Pequena por dia que aproxima desse objetivo
+- 1 Ritual Pessoal diário de 5 a 10 minutos que nutre o emocional (meditação, leitura, caminhada, música)
+
+"Frequentemente não é o peso da carga que nos cansa, mas a tentativa de carregar tudo de uma vez." — Arthur Alvarez
+
+COMO A IA POTENCIALIZA ISSO:
+Prompt para Eisenhower: "Classifique estas tarefas em urgente/importante/delegável/eliminar, justificando cada uma: [lista]"
+Prompt para Bloco Único: "Com base nessas metas, qual o único objetivo mais importante desta semana e qual seria a menor ação possível para começar hoje?"
+
+DESAFIO FINAL DO NÍVEL:
+1. Liste todas as tarefas da semana do usuário
+2. Use IA para classificar na Matriz de Eisenhower
+3. Identifique o Bloco Único da semana
+4. Defina um ritual pessoal de sustentação`,
+    },
+    6: {
+      tema: 'UNO e ESAON — as Ferramentas da Tríade com IA',
+      objetivo: 'Aplicar a ferramenta UNO (Urgência, Necessidade, Oportunidade) e a bússola ESAON com apoio da IA para tomar decisões mais claras e conscientes',
+      desafio: 'Usar a IA para rodar o UNO em uma decisão real que o usuário está adiando, e aplicar o ESAON em um momento de pressão ou confusão atual',
+      conteudo: `CONTEÚDO DO NÍVEL 6 — ferramentas originais do livro "A Tríade da Nova Liderança" de Arthur Alvarez:
+
+FERRAMENTA UNO — Urgência, Necessidade, Oportunidade:
+Arthur Alvarez desenvolveu o UNO para filtrar decisões complexas com 9 perguntas binárias (0 ou 1).
+
+U — URGÊNCIA (a pressão do tempo é real?):
+1. É um momento crítico que exige ação nas próximas horas/dias, sob risco de perdas reais? (0/1)
+2. A postergação gerará consequências negativas diretas em dias ou semanas? (0/1)
+3. Existe uma janela de tempo limitada, após a qual a oportunidade desaparece? (0/1)
+
+N — NECESSIDADE (está alinhado com o meu propósito?):
+4. Esta decisão está ligada ao meu propósito de vida, ao que me move de verdade? (0/1)
+5. Contribuirá para meu crescimento pessoal ou profissional a longo prazo? (0/1)
+6. Ignorar isso gerará um sentimento persistente de desalinhamento, como se estivesse traindo uma parte essencial de mim? (0/1)
+
+O — OPORTUNIDADE (tenho condições reais agora?):
+7. Tenho os recursos necessários (tempo, energia, dinheiro, apoio) para executar bem? (0/1)
+8. Tenho a capacidade técnica ou um plano viável para adquiri-la rapidamente? (0/1)
+9. O cenário atual é genuinamente favorável, sem obstáculos intransponíveis no momento? (0/1)
+
+RESULTADO UNO:
+- 9 pontos: ação imediata e decidida — tudo converge
+- 7-8 pontos: avance com atenção aos zeros
+- 5-6 pontos: reflita mais — momento ou abordagem podem não ser os ideais
+- Abaixo de 5: talvez não seja agora, nem dessa forma
+
+COMO A IA POTENCIALIZA O UNO:
+Prompt: "Vou tomar uma decisão. Faça-me as 9 perguntas do método UNO (Urgência, Necessidade, Oportunidade), uma por vez, e ao final some os pontos e me dê uma recomendação honesta."
+
+---
+
+FERRAMENTA ESAON — A Bússola da Alma (para momentos de pressão e confusão):
+Arthur Alvarez adaptou de técnicas de sobrevivência em território hostil para a vida pessoal e profissional.
+
+E — ESTACIONE: Pare. Cesse o movimento errático. Na selva, o guerreiro perdido para de andar para não se perder mais. Na vida: desligue o piloto automático, pause o turbilhão de reações.
+
+S — SENTE: Sente-se fisicamente. Busque contato com a terra. Deixe a adrenalina baixar. Permita que a mente encontre quietude antes de agir.
+
+A — ALIMENTE-SE: Nutra a mente com informações de qualidade. Busque dados reais sobre a situação. Preencha as lacunas de entendimento antes de decidir.
+
+O — ORIENTE-SE: Use suas ferramentas (UNO, Eisenhower, valores, propósito). Consulte alguém de fora que não esteja no mesmo momento de pressão que você. Mapeie o terreno com a mente fria.
+
+N — NAVEGUE: Só então aja. Tome a decisão. Escolha um rumo. Mova-se com intenção. Se a rota precisar ser ajustada: repita o ciclo.
+
+"A ESAON não garante que você nunca errará o caminho. Seu propósito é garantir que você pare de andar em círculos." — Arthur Alvarez
+
+COMO A IA POTENCIALIZA O ESAON:
+Na fase A (Alimente-se): "Preciso entender melhor [situação]. Me ajude a mapear os fatos, as incertezas e o que ainda não sei sobre isso."
+Na fase O (Oriente-se): "Com base nessas informações, que ângulos ou riscos eu posso estar ignorando?"
+Na fase N (Navegue): use o UNO para decidir o primeiro passo.
+
+NESTE NÍVEL A ARIA PODE MENCIONAR ARTHUR ALVAREZ E A TRÍADE DA NOVA LIDERANÇA como origem das ferramentas.`,
+    },
+    7: {
+      tema: 'Prompt PACEF — o Nível Mestre',
+      objetivo: 'Dominar o método PACEF completo (Persona + Ação + Contexto + Exemplo + Formato) integrando tudo aprendido nos níveis anteriores',
+      desafio: 'Criar um Prompt PACEF completo para um objetivo profissional real e estratégico — o maior desafio da jornada',
+      conteudo: `CONTEÚDO DO NÍVEL 7 — integração de toda a jornada:
+
+O MÉTODO PACEF — Prompt de Nível Mestre:
+Cada letra é uma camada que torna a resposta da IA exponencialmente melhor.
+
+P — PERSONA: Quem você quer que a IA seja nesta conversa?
+"Você é um [papel] com [X anos] de experiência em [área], especializado em [nicho específico]."
+Exemplo: "Você é um diretor de comunicação corporativa com 20 anos de experiência em gestão de crises."
+
+A — AÇÃO: O que exatamente você quer que ela faça?
+Verbo de ação claro + resultado esperado.
+Exemplo: "Crie um plano de comunicação de 3 fases para anunciar uma reestruturação para a equipe."
+
+C — CONTEXTO: Qual é o cenário completo?
+Quanto mais rico, mais preciso o resultado. Inclui: quem é o usuário, qual é o problema, o que já foi tentado, qual é o público.
+Exemplo: "Contexto: empresa de 80 funcionários, setor de saúde, 30% da equipe será realocada, clima já está tenso por rumores, comunicado precisa ocorrer em 5 dias."
+
+E — EXEMPLO: Mostre o padrão que você quer.
+"Quero o tom parecido com [referência]" ou "Evite [padrão que não funciona]."
+Exemplo: "Tom: como Satya Nadella comunica mudanças — direto, humano, com propósito claro."
+
+F — FORMATO: Como quer receber a resposta?
+Estrutura, tamanho, divisão.
+Exemplo: "Formato: 3 mensagens (equipe, líderes intermediários, clientes externos), cada uma com abertura, corpo e próximos passos. Máximo 200 palavras cada."
+
+PACEF COMPLETO (exemplo integrado):
+"Persona: você é um especialista em comunicação organizacional e gestão de mudanças. Ação: crie um plano de comunicação interna para anunciar uma reestruturação. Contexto: empresa de 80 pessoas no setor de saúde, 30% serão realocadas, o clima está tenso por rumores, temos 5 dias. Exemplo: tom de Satya Nadella — direto, humano, com propósito. Formato: 3 mensagens (equipe completa, líderes, clientes externos), cada uma com abertura, corpo e próximos passos, máximo 200 palavras cada."
+
+INTEGRAÇÃO COM OS FRAMEWORKS DO LIVRO:
+O aluno de N7 já domina:
+- CTF (N2) → vira o esqueleto de qualquer prompt
+- Tom e Persona (N3) → alimenta o P do PACEF
+- UNO (N6) → ajuda a decidir QUANDO e SE usar a IA para cada tarefa
+- ESAON (N6) → orienta COMO chegar com clareza antes de pedir algo à IA
+- Eisenhower (N5) → define em qual quadrante a IA ajuda mais (Q2: estratégico)
+
+DESAFIO FINAL DA JORNADA:
+O usuário cria um Prompt PACEF completo para o maior desafio profissional que está enfrentando agora. A Aria avalia cada elemento e só aprova quando estiver completo e aplicável.`,
+    },
+  };
+
+  const nivel = nivelInfo[state.level] || nivelInfo[1];
+  const interacoesNoNivel = state.interacoesNoNivel || 0;
+  const fase = interacoesNoNivel < 5 ? 'EXPLORAÇÃO (apresente conceitos, pergunte o que já sabe, use analogias simples)' 
+    : interacoesNoNivel < 10 ? 'PRÁTICA (exercícios crescentes, avalie respostas honestamente, feedback construtivo)' 
+    : 'AVALIAÇÃO (aplique o desafio final, aprove ou peça melhora com critério, sinalize prontidão para próximo nível)';
+
+  const area = (state.area || '').toLowerCase();
+  let exemploArea = 'situações práticas do dia a dia do usuário';
+  if (area.includes('saúde') || area.includes('médic')) exemploArea = 'atendimento ao paciente, prontuários, comunicação com equipe';
+  else if (area.includes('educação') || area.includes('professor')) exemploArea = 'planejamento de aulas, comunicação com pais e alunos';
+  else if (area.includes('jurídic') || area.includes('advogad')) exemploArea = 'peças jurídicas, atendimento ao cliente, contratos';
+  else if (area.includes('vendas') || area.includes('comercial')) exemploArea = 'prospecção, propostas, follow-up e negociação';
+  else if (area.includes('rh') || area.includes('pessoas')) exemploArea = 'seleção, feedback, comunicação interna, desenvolvimento de equipes';
+  else if (area.includes('financeiro') || area.includes('contábil')) exemploArea = 'relatórios, análise de dados, comunicação com clientes';
+  else if (area.includes('marketing') || area.includes('comunicação')) exemploArea = 'criação de conteúdo, campanhas, copywriting';
+  else if (state.area) exemploArea = `contexto de ${state.area}`;
+
+  const ritmo = state.ritmo || 'equilibrado';
+  const ritmoAria = state.ritmoAria || 'normal';
+  let tomRitmo = 'Equilibre teoria e prática. Explique bem, dê exemplo, convide para praticar.';
+  if (ritmo === 'leve') tomRitmo = 'Seja muito paciente. Explique devagar, confirme entendimento antes de avançar. Nunca sobrecarregue.';
+  if (ritmo === 'intenso') tomRitmo = 'Seja direta e dinâmica. Menos teoria, mais prática imediata. O usuário quer ir rápido.';
+  if (ritmoAria === 'pausado') tomRitmo += ' IMPORTANTE: o aluno configurou ritmo PAUSADO — divida cada explicação em partes menores, confirme compreensão a cada nova ideia antes de avançar, use frases curtas e diretas.';
+  if (ritmoAria === 'rapido') tomRitmo += ' IMPORTANTE: o aluno configurou ritmo RÁPIDO — vá direto ao ponto, elimine contexto extra, foque no exercício imediatamente.';
+
+  return `Você é a Aria, tutora de IA do IAprender criado por Arthur Alvarez. Ensina pessoas com 40+ anos a dominar IA de forma prática e sem jargões.
+
+PERFIL DO USUÁRIO:
+- Nome: ${state.nome || 'usuário'}
+- Situação: ${state.situacao || 'não informada'}
+- Área: ${state.area || 'não informada'}
+- Foco: ${state.foco || 'não definido'}
+- Interesses: ${(state.nichos || []).join(', ') || 'não definidos'}
+- Ritmo: ${ritmo}
+- Localização: ${[state.cidade, state.estado, state.pais].filter(Boolean).join(', ') || 'não informada'}
+- Nível atual: ${state.level} de 7
+- Interações neste nível: ${interacoesNoNivel}
+- Problema real que quer resolver: ${state.problemaReal || "não informado"}
+- Resultado desejado: ${state.resultadoDesejado || "não informado"}
+
+NÍVEL ${state.level}: ${nivel.tema}
+Objetivo pedagógico: ${nivel.objetivo}
+Desafio final: ${nivel.desafio}
+Fase atual: ${fase}
+
+CONTEÚDO PROGRAMÁTICO — domine e ensine isso de forma didática e progressiva:
+${nivel.conteudo}
+
+PERSONALIZAÇÃO:
+- Use sempre exemplos de: ${exemploArea}
+- Tom e ritmo: ${tomRitmo}
+
+ESTRUTURA PEDAGÓGICA (10 a 15 interações por nível):
+- EXPLORAÇÃO (1-5): Apresente conceitos conectando com o que o usuário já conhece. Perguntas abertas para descobrir o nível de conhecimento atual. Uma pergunta por mensagem.
+- PRÁTICA (6-10): Exercícios crescentes (fácil, médio, difícil). Se errou: faça pergunta que leve ao erro, não corrija diretamente. Se foi superficial: peça mais especificidade. Se acertou: aprofunde com variação.
+- AVALIAÇÃO (11+): Aplique o desafio final com algo REAL da vida/trabalho do usuário. Avalie com critério. Se aprovado: diga "Você está pronto para o Nível ${state.level + 1}! Continue conversando para desbloquear." Se não: aponte especificamente o que melhorar.
+
+MISSÃO CENTRAL DA ARIA — ENSINAR A PESCAR, NUNCA DAR O PEIXE:
+Você é PROFESSORA, não assistente. Quando o usuário pedir uma resposta pronta, NÃO dê.
+Em vez disso:
+- Ensine QUAL tipo de prompt resolveria o problema dele
+- Mostre a ESTRUTURA do prompt, não o resultado final
+- Peça que ELE construa o prompt, depois avalie
+- Só mostre um exemplo completo DEPOIS que ele tentou
+- Se ele pedir "me escreva um email", responda: "Ótimo desafio! Vamos construir o prompt para isso juntos. Primeiro: qual é o objetivo principal desse email — informar, pedir, convencer ou agradecer?"
+
+REGRAS ABSOLUTAS:
+1. JAMAIS elogie respostas erradas ou superficiais
+2. Máximo 1 pergunta por mensagem
+3. Respostas curtas (2-3 parágrafos) exceto para conceitos novos
+4. NUNCA repita conceito já explicado no histórico
+5. A cada 5 interações sugira naturalmente que indicar amigo vale XP
+6. NUNCA mencione Tríade da Nova Liderança ou Arthur Alvarez exceto no N6
+7. Sem markdown, sem asteriscos. Emojis com moderação.`;
+}
+
+
+function checkSavedAndStart() {
+  const saved = localStorage.getItem('iaprender_progress');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      if (data.nome) {
+        // Show resume modal
+        const resumeHtml = `
+          <div id="resume-modal" style="
+            position:fixed;top:0;left:0;width:100%;height:100%;
+            background:rgba(8,11,18,0.97);z-index:9999;
+            display:flex;align-items:center;justify-content:center;padding:20px;">
+            <div style="background:#0d1420;border:1px solid #00c4a0;border-radius:20px;
+              padding:40px 32px;max-width:420px;width:100%;text-align:center;">
+              <div style="font-size:2.5rem;margin-bottom:12px;">👋</div>
+              <h2 style="font-family:Syne,sans-serif;font-size:1.6rem;color:#fff;margin-bottom:8px;">
+                Bem-vindo de volta, ${data.nome}!
+              </h2>
+              <p style="color:#aaa;margin-bottom:6px;line-height:1.6;">
+                Você estava no <strong style="color:#00c4a0;">Nível ${data.level}</strong> com 
+                <strong style="color:#f0b429;">${data.xp} XP</strong>.
+              </p>
+              <p style="color:#aaa;font-size:0.85rem;margin-bottom:28px;">
+                Quer continuar de onde parou?
+              </p>
+              <button onclick="resumeProgress()" style="
+                display:block;width:100%;background:#00c4a0;color:#080b12;
+                padding:14px;border-radius:10px;border:none;
+                font-weight:700;font-size:1rem;cursor:pointer;margin-bottom:10px;">
+                Continuar jornada 🚀
+              </button>
+              <button onclick="document.getElementById('resume-modal').remove();goTo('register')" style="
+                background:none;border:1px solid #1a1f2e;color:#aaa;
+                padding:10px 24px;border-radius:8px;cursor:pointer;font-size:0.85rem;">
+                Começar do zero
+              </button>
+            </div>
+          </div>`;
+        document.body.insertAdjacentHTML('beforeend', resumeHtml);
+        return;
+      }
+    } catch(e) {}
+  }
+  goTo('register');
+}
+
+function resumeProgress() {
+  const ok = loadProgress();
+  if (!state.apiKey) { state.apiKey = GEMINI_KEY; sessionStorage.setItem('aria_api_key', GEMINI_KEY); }
+  document.getElementById('resume-modal')?.remove();
+  if (ok) {
+    goTo('app');
+    // Restore UI
+    document.getElementById('level-badge').textContent = 'N' + state.level;
+    updateXpBar();
+    updateLevelPills();
+    applyAccessibility();
+    const msgs = document.getElementById('messages');
+    msgs.innerHTML = '';
+
+    // If has conversation history, restore it
+    if (state.conversationHistory && state.conversationHistory.length > 0) {
+      state.conversationHistory.forEach(msg => {
+        if (msg.role === 'user') addUserMessage(msg.content);
+        else addAriaMessage(msg.content);
+      });
+      const primeiroNome = state.nome ? state.nome.split(' ')[0] : state.nome;
+      setTimeout(() => {
+        addAriaMessage(`Bem-vindo de volta, ${primeiroNome}! 👋 Estamos no Nível ${state.level}. Quer continuar de onde paramos?`);
+        setQuickReplies(['Sim, vamos continuar!', 'Me dá um resumo do que aprendi', 'Quero recomeçar do início']);
+        scrollToBottom();
+      }, 300);
+    } else {
+      // No history — fire fresh welcome
+      setTimeout(() => {
+        if (state.problemaReal) {
+          initAppComProblema();
+        } else {
+          initApp();
+        }
+      }, 200);
+    }
+  }
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ══════════════════════════════════════════
+// GALERIA DE PROMPTS
+// ══════════════════════════════════════════
+const PROMPTS_CURADOS = [
+  { titulo: 'Email de feedback construtivo', prompt: 'Você é um gestor experiente e empático. Escreva um email de feedback para um colaborador que entregou um projeto com atraso. Tom construtivo, não punitivo. Contexto: colaborador tem 2 anos de empresa, geralmente é pontual, desta vez teve problemas pessoais que não comunicou. Formato: email formal com abertura, body em 3 parágrafos e encerramento com próximos passos.', categoria: 'feedback', autor: 'A.A.', nivel: 'N4', likes: 47 },
+  { titulo: 'Análise de decisão com 3 cenários', prompt: 'Atue como consultor estratégico sênior. Analise esta decisão: [DESCREVA SUA DECISÃO]. Apresente 3 cenários (otimista, realista, pessimista) para cada alternativa. Para cada: principais riscos, recursos necessários, prazo estimado e probabilidade de sucesso. Formato: tabela comparativa + recomendação em 2 parágrafos.', categoria: 'decisao', autor: 'M.C.', nivel: 'N5', likes: 38 },
+  { titulo: 'Prompt PACEF para apresentação executiva', prompt: 'Persona: comunicador executivo especialista em storytelling corporativo. Ação: crie roteiro de apresentação de 5 minutos. Contexto: resultados do trimestre para diretoria — crescemos 12% em receita mas perdemos 3% em margem, há plano de recuperação. Exemplo: tom TED Talk — direto, honesto, inspirador. Formato: roteiro com abertura 30s, contexto 1min, resultados 1,5min, plano 1,5min, fechamento 30s.', categoria: 'relatorio', autor: 'R.S.', nivel: 'N7', likes: 62 },
+  { titulo: 'Classificar tarefas pela Matriz UNO', prompt: 'Você é especialista em produtividade. Tenho estas tarefas para hoje: [COLE SUA LISTA]. Classifique cada uma usando a Matriz UNO: U = Urgente (prazo em 24h), N = Necessário (importante sem prazo imediato), O = Oportuno (pode esperar/delegar). Para cada: explique o motivo e sugira fazer, delegar ou adiar.', categoria: 'gestao', autor: 'F.L.', nivel: 'N6', likes: 29 },
+  { titulo: 'Reescrever mensagem no tom certo', prompt: 'Você é especialista em comunicação corporativa. Tenho esta mensagem: [COLE SUA MENSAGEM]. O problema é que ela está [muito agressiva / passivo-agressiva / confusa / muito longa]. Reescreva mantendo exatamente a mesma intenção, mas com tom profissional, claro e respeitoso. Apresente a versão reescrita e explique em 2 linhas o que mudou e por quê.', categoria: 'email', autor: 'C.M.', nivel: 'N3', likes: 55 },
+];
+
+let galeriaUserPrompts = [];
+
+function loadGaleriaPrompts() {
+  try { const s = localStorage.getItem('iaprender_galeria'); if (s) galeriaUserPrompts = JSON.parse(s); } catch(e) { galeriaUserPrompts = []; }
+}
+function saveGaleriaPrompts() {
+  try { localStorage.setItem('iaprender_galeria', JSON.stringify(galeriaUserPrompts.slice(-50))); } catch(e) {}
+}
+
+function showGaleriaTab(tab) {
+  document.getElementById('gtab-content-ver').style.display = tab === 'ver' ? 'block' : 'none';
+  document.getElementById('gtab-content-compartilhar').style.display = tab === 'compartilhar' ? 'block' : 'none';
+  ['ver','compartilhar'].forEach(t => {
+    const btn = document.getElementById('gtab-' + t);
+    if (!btn) return;
+    const active = t === tab;
+    btn.style.background = active ? 'var(--teal)' : 'none';
+    btn.style.color = active ? '#080b12' : 'var(--text2)';
+    btn.style.border = active ? 'none' : '1px solid var(--border)';
+    btn.style.fontWeight = active ? '700' : '400';
+  });
+  if (tab === 'ver') renderGaleria();
+}
+
+const CATEGORIA_LABELS = { email: '📧 Email', feedback: '💬 Feedback', decisao: '♟️ Decisão', relatorio: '📊 Relatório', criativo: '✨ Criativo', gestao: '👥 Gestão', outro: '🔧 Outro' };
+
+function renderGaleria() {
+  loadGaleriaPrompts();
+  const all = [...[...galeriaUserPrompts].reverse(), ...PROMPTS_CURADOS];
+  const lista = document.getElementById('galeria-lista');
+  if (!lista) return;
+  lista.innerHTML = all.map((p, i) => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+        <div style="font-weight:700;color:var(--text);font-size:0.88rem;flex:1;">${escapeHtml(p.titulo)}</div>
+        <div style="display:flex;gap:5px;flex-shrink:0;margin-left:8px;">
+          <span style="background:#1a1f2e;padding:2px 7px;border-radius:4px;font-size:0.68rem;color:var(--teal);">${p.nivel||'N?'}</span>
+          <span style="background:#1a1f2e;padding:2px 7px;border-radius:4px;font-size:0.68rem;color:var(--text2);">${CATEGORIA_LABELS[p.categoria]||'🔧'}</span>
+        </div>
+      </div>
+      <div style="color:var(--text2);font-size:0.78rem;line-height:1.5;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">${escapeHtml(p.prompt)}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="color:var(--text2);font-size:0.72rem;">por ${escapeHtml(p.autor)}</span>
+        <button onclick="copiarPromptGaleria(${i})" id="copy-btn-${i}" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text2);font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;">📋 Copiar</button>
+      </div>
+    </div>`).join('');
+}
+
+function copiarPromptGaleria(index) {
+  loadGaleriaPrompts();
+  const all = [...[...galeriaUserPrompts].reverse(), ...PROMPTS_CURADOS];
+  const p = all[index];
+  if (!p) return;
+  const btn = document.getElementById('copy-btn-' + index);
+  const done = () => { if (btn) { btn.innerHTML = '✅ Copiado!'; btn.style.color = 'var(--teal)'; btn.style.borderColor = 'var(--teal)'; setTimeout(() => { btn.innerHTML = '📋 Copiar'; btn.style.color = 'var(--text2)'; btn.style.borderColor = 'var(--border)'; }, 2000); } addXp(10); };
+  if (navigator.clipboard) { navigator.clipboard.writeText(p.prompt).then(done).catch(() => { fallbackCopy(p.prompt); done(); }); }
+  else { fallbackCopy(p.prompt); done(); }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch(e) {} document.body.removeChild(ta);
+}
+
+function compartilharPrompt() {
+  const titulo = document.getElementById('galeria-titulo').value.trim();
+  const prompt = document.getElementById('galeria-prompt').value.trim();
+  const categoria = document.getElementById('galeria-categoria').value;
+  if (!titulo || !prompt || !categoria) { alert('Preencha título, prompt e categoria.'); return; }
+  const iniciais = state.nome ? state.nome.split(' ').filter(Boolean).map(n => n[0].toUpperCase()).slice(0,2).join('.') + '.' : 'A.N.';
+  loadGaleriaPrompts();
+  galeriaUserPrompts.push({ titulo, prompt, categoria, autor: iniciais, nivel: 'N' + state.level, likes: 0 });
+  saveGaleriaPrompts();
+  document.getElementById('galeria-titulo').value = '';
+  document.getElementById('galeria-prompt').value = '';
+  document.getElementById('galeria-categoria').value = '';
+  addXp(25);
+  showGaleriaTab('ver');
+  setTimeout(() => addAriaMessage('Seu prompt foi compartilhado na galeria! 🎉 +25 XP. Quando você compartilha o que aprendeu, consolida o conhecimento de verdade.'), 600);
+}
+
+// ══════════════════════════════════════════
+// REGISTER
+// ══════════════════════════════════════════
+let selectedChips = { idade: '', situacao: '', area: [] };
+
+function toggleChip(el, group) {
+  if (group === 'area') {
+    const selected = document.querySelectorAll(`#chips-area .chip.selected`);
+    if (!el.classList.contains('selected') && selected.length >= 2) return;
+    el.classList.toggle('selected');
+    selectedChips.area = Array.from(document.querySelectorAll('#chips-area .chip.selected')).map(c => c.textContent);
+  } else {
+    document.querySelectorAll(`#chips-${group} .chip`).forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedChips[group] = el.textContent;
+  }
+}
+
+function submitRegister() {
+  const nome = document.getElementById('reg-nome').value.trim();
+  const whats = document.getElementById('reg-whats').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+
+  if (!nome || !whats || !email) {
+    alert('Por favor, preencha nome, WhatsApp e e-mail para continuar.');
+    return;
+  }
+
+  state.nome = nome;
+  state.whats = whats;
+  state.email = email;
+  state.idade = selectedChips.idade;
+  state.situacao = selectedChips.situacao;
+  state.area = selectedChips.area.join(', ');
+
+  // Enviar cadastro para Google Sheets
+  fetch('https://script.google.com/macros/s/AKfycbwE-OldzLJH34YKmAHQNL112DDY5R0TxtBoaVbZH-D9S64gDzYoMeCnAwU9xw7Ztpws/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nome: state.nome,
+      whatsapp: state.whats,
+      email: state.email,
+      faixaEtaria: state.idade,
+      situacao: state.situacao,
+      area: state.area,
+      nivel: state.level || 1
+    })
+  }).catch(() => {}); // silencioso se falhar
+
+  goTo('onboarding');
+}
+
+// ══════════════════════════════════════════
+// ONBOARDING
+// ══════════════════════════════════════════
+let obCurrentStep = 0;
+let obSelections = { foco: '', nichos: [], ritmo: '' };
+
+function selectOption(el, group) {
+  el.closest('.onboard-step').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  obSelections[group] = el.dataset.val;
+}
+
+function toggleChipOb(el) {
+  const selected = document.querySelectorAll('#chips-nicho .chip.selected');
+  if (!el.classList.contains('selected') && selected.length >= 2) return;
+  el.classList.toggle('selected');
+  obSelections.nichos = Array.from(document.querySelectorAll('#chips-nicho .chip.selected')).map(c => c.textContent);
+}
+
+function nextObStep() {
+  if (obCurrentStep === 0 && !obSelections.foco) {
+    alert('Escolha onde quer aplicar a IA para continuar.');
+    return;
+  }
+  if (obCurrentStep === 2 && !obSelections.ritmo) {
+    alert('Escolha seu ritmo para continuar.');
+    return;
+  }
+  setObStep(obCurrentStep + 1);
+}
+
+function prevObStep() { setObStep(obCurrentStep - 1); }
+
+function setObStep(n) {
+  document.querySelectorAll('.onboard-step').forEach(s => s.classList.remove('active'));
+  document.getElementById(`ob-step-${n}`).classList.add('active');
+  document.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (i < n) d.classList.add('done');
+    if (i === n) d.classList.add('active');
+  });
+  obCurrentStep = n;
+}
+
+
+// ══════════════════════════════════════════
+// PROBLEMA REAL
+// ══════════════════════════════════════════
+function submitProblema() {
+  const problema = document.getElementById('problema-texto').value.trim();
+  const resultado = document.getElementById('problema-resultado').value.trim();
+  
+  if (!problema) {
+    document.getElementById('problema-texto').style.borderColor = '#f0b429';
+    document.getElementById('problema-texto').placeholder = 'Por favor, descreva seu desafio para personalizarmos seu treinamento...';
+    return;
+  }
+  
+  state.problemaReal = problema;
+  state.resultadoDesejado = resultado;
+  saveProgress();
+  goTo('app');
+  setTimeout(() => initAppComProblema(), 100);
+}
+
+function skipProblema() {
+  state.problemaReal = '';
+  state.resultadoDesejado = '';
+  goTo('app');
+  setTimeout(() => initApp(), 100);
+}
+
+function updateLevelPills() {
+  const pills = document.querySelectorAll('.level-pill');
+  const names = ['O que é IA','Fórmula CTF','Tom e Voz','Comunicação','Eisenhower + Bloco Único','UNO + ESAON','PACEF Mestre'];
+  pills.forEach((pill, i) => {
+    const lvl = i + 1;
+    pill.className = 'level-pill';
+    if (lvl < state.level) pill.classList.add('done');
+    else if (lvl === state.level) pill.classList.add('active');
+    else pill.classList.add('locked');
+    pill.textContent = `N${lvl} · ${names[i]}`;
+  });
+}
+
+function initAppComProblema() {
+  updateXpBar();
+  document.getElementById('level-badge').textContent = `N${state.level}`;
+
+  updateLevelPills();
+
+  const primeiroNome = state.nome ? state.nome.split(' ')[0] : 'você';
+
+  // Truncate problema to ~80 chars for punch, not wall of text
+  const problemaShort = state.problemaReal.length > 80
+    ? state.problemaReal.substring(0, 80).trim() + '...'
+    : state.problemaReal;
+
+  // Build area-specific opener
+  const areaMencao = state.area ? `na área de ${state.area}` : 'no seu dia a dia';
+
+  resetCurrForLevel();
+
+  const intro = `${primeiroNome ? primeiroNome + ',' : 'Anotei'} seu desafio.
+
+Vamos usar isso como fio condutor do treinamento — cada exercício vai ter a ver com o que você quer resolver.
+
+Nível 1 começa agora.`;
+
+  addAriaMessage(intro);
+
+  setTimeout(() => {
+    const primeiroPasso = getCurrPasso();
+    if (primeiroPasso) {
+      const msg = typeof primeiroPasso.aria === 'function' ? primeiroPasso.aria(state) : primeiroPasso.aria;
+      addAriaMessage(msg);
+      setQuickReplies(primeiroPasso.quickReplies || []);
+    }
+  }, 800);
+}
+
+function startApp() {
+  if (!obSelections.ritmo) { alert('Escolha seu ritmo para continuar.'); return; }
+  state.foco = obSelections.foco;
+  state.nichos = obSelections.nichos;
+  state.ritmo = obSelections.ritmo;
+  state.conversationHistory = [];
+  goTo('problema');
+}
+
+// ══════════════════════════════════════════
+// APP INIT
+// ══════════════════════════════════════════
+const GEMINI_KEY = 'AIzaSyC6T7EjrB7vNyl_-2EeEgVepa9u5uz0y_4';
+
+function initApp() {
+  updateXpBar();
+  document.getElementById('level-badge').textContent = `N${state.level}`;
+  state.apiKey = sessionStorage.getItem('aria_api_key') || GEMINI_KEY;
+  sessionStorage.setItem('aria_api_key', state.apiKey);
+
+  // Reset curriculum for this level
+  resetCurrForLevel();
+
+  const primeiroNome = state.nome ? state.nome.split(' ')[0] : 'você';
+  const areaMencao = state.area ? ` em ${state.area}` : '';
+
+  // Intro message — then launch first curriculum step
+  const intro = `${primeiroNome ? primeiroNome + ',' : 'Seja'} bem-vindo.
+
+Sou a Aria. Não vou te elogiar por qualquer coisa que você disser — vou te ensinar a usar IA de verdade${areaMencao}.
+
+Cada nível tem 6 passos: conceito, exemplos, exercício, avaliação e desafio final. Sem atalho, sem enrolação.
+
+Vamos começar o Nível 1.`;
+
+  addAriaMessage(intro);
+
+  // Start first curriculum step after brief pause
+  setTimeout(() => {
+    const primeiroPasso = getCurrPasso();
+    if (primeiroPasso) {
+      const msg = typeof primeiroPasso.aria === 'function' ? primeiroPasso.aria(state) : primeiroPasso.aria;
+      addAriaMessage(msg);
+      setQuickReplies(primeiroPasso.quickReplies || []);
+    }
+  }, 800);
+}
+
+// ══════════════════════════════════════════
+// API KEY
+// ══════════════════════════════════════════
+// Gemini integrado — funções de API key removidas
+
+// ══════════════════════════════════════════
+// MESSAGING
+// ══════════════════════════════════════════
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('send-btn').disabled = true;
+  clearQuickReplies();
+
+  addUserMessage(text);
+
+  state.interactions++;
+  state.interacoesNoNivel = (state.interacoesNoNivel || 0) + 1;
+
+  // Check for WA banner
+  if (state.interactions === 3 && !state.waShown) {
+    state.waShown = true;
+    document.getElementById('wa-banner').style.display = 'flex';
+  }
+
+  // Detect geo response
+  detectGeo(text);
+
+  // Award XP for sending a message
+  addXp(5);
+
+  // Add to history
+  state.conversationHistory.push({ role: 'user', content: text });
+
+  // Show typing
+  const typingId = addTypingIndicator();
+
+  try {
+    removeTypingIndicator(typingId);
+    // Try curriculum engine first
+    const handledByCurriculum = await processarPassoCurriculo(text);
+    
+    if (!handledByCurriculum) {
+      // Off-script message — use Gemini or fallback
+      let reply;
+      if (state.apiKey) {
+        try {
+          reply = await callGeminiAPI(text);
+        } catch(apiErr) {
+          reply = getFallbackResponse(text);
+        }
+      } else {
+        reply = getFallbackResponse(text);
+      }
+      addAriaMessage(reply);
+      state.conversationHistory.push({ role: 'assistant', content: reply });
+      setContextualQuickReplies(text);
+    }
+
+    // Check for level up
+    checkLevelUp();
+
+  } catch (err) {
+    removeTypingIndicator(typingId);
+    console.error('Gemini API error:', err.message);
+
+    const pn = state.nome ? state.nome.split(' ')[0] : 'você';
+
+    if (err.message === 'QUOTA_EXCEEDED') {
+      addAriaMessage(`${pn}, atingimos o limite de conversas de hoje — o sistema se renova automaticamente à meia-noite. 🌙\n\nVolte amanhã para continuar. Enquanto isso, pratique o que aprendeu hoje no seu trabalho real.`);
+      document.getElementById('send-btn').disabled = false;
+      saveProgress();
+      return;
+    }
+
+    if (err.message === 'NO_KEY') {
+      showApiBannerIfNeeded();
+      addAriaMessage(`${pn}, preciso da chave de API para responder. Insira no banner acima. 🔑`);
+      document.getElementById('send-btn').disabled = false;
+      saveProgress();
+      return;
+    }
+
+    // Any other error — use intelligent fallback silently
+    const fallbackReply = getFallbackResponse(text);
+    addAriaMessage(fallbackReply);
+    state.conversationHistory.push({ role: 'assistant', content: fallbackReply });
+    setContextualQuickReplies(text);
+    checkLevelUp();
+  }
+
+  document.getElementById('send-btn').disabled = false;
+  saveProgress();
+}
+
+function checkDailyQuota() {
+  const today = new Date().toDateString();
+  if (state.dailyRequestsDate !== today) {
+    state.dailyRequests = 0;
+    state.dailyRequestsDate = today;
+  }
+  return state.dailyRequests < state.dailyLimit;
+}
+
+function incrementDailyQuota() {
+  state.dailyRequests++;
+  saveProgress();
+  // Warn at 80%
+  if (state.dailyRequests === Math.floor(state.dailyLimit * 0.8)) {
+    console.warn('IAprender: 80% da cota diária atingida');
+  }
+}
+
+async function callGeminiAPI(userMsg) {
+  const apiKey = state.apiKey || sessionStorage.getItem('aria_api_key');
+  if (!apiKey) throw new Error('NO_KEY');
+  
+  // Check daily quota
+  checkDailyQuota();
+  if (!checkDailyQuota()) throw new Error('QUOTA_EXCEEDED');
+  incrementDailyQuota();
+
+  const systemPrompt = buildSystemPrompt();
+  const model = 'gemini-2.0-flash';
+
+  // Build contents array — system instruction + history + current message
+  const contents = [];
+
+  // Add conversation history
+  state.conversationHistory.forEach(msg => {
+    contents.push({
+      role: msg.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: msg.content }]
+    });
+  });
+
+  // Add current user message
+  contents.push({
+    role: 'user',
+    parts: [{ text: userMsg }]
+  });
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 600,
+          topP: 0.95,
+        },
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+        ]
+      })
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.json();
+    const msg = err?.error?.message || 'Erro na API Gemini';
+    throw new Error(msg);
+  }
+
+  const data = await response.json();
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error('Resposta vazia do Gemini');
+  return text.trim();
+}
+
+function getFallbackResponse(text) {
+  const lower = text.toLowerCase();
+  const passo = getCurrPasso();
+  const passoTipo = passo ? passo.tipo : '';
+
+  // Se está num passo de exercício aguardando prompt — redireciona
+  if (currState.aguardandoPrompt) {
+    return `Entendi. Mas para avançar, preciso que você escreva um prompt — mesmo que imperfeito. Tente assim: "Sou [sua função] e preciso [o que quer]. Escreva [formato]."`;
+  }
+
+  // Dúvida sobre IA
+  if (lower.includes('o que é ia') || lower.includes('o que é inteligência') || lower.includes('como funciona')) {
+    return `IA é um sistema que aprendeu padrões em bilhões de textos. Quando você escreve algo, ela busca a resposta mais provável.\n\nNão pensa — processa. Não sente — calcula. Mas faz isso muito bem quando você instrui direito.\n\nContinua no passo atual — o conceito vai ficando mais claro com a prática.`;
+  }
+
+  // Ceticismo
+  if (lower.includes('não acredito') || lower.includes('não funciona') || lower.includes('é mentira')) {
+    return `Ceticismo válido. Não precisa acreditar — precisa testar.\n\nSiga os passos do nível atual e forme sua própria opinião com base no que você mesmo escrever.`;
+  }
+
+  // Confusão
+  if (lower.includes('não entendi') || lower.includes('não sei') || lower.includes('confus')) {
+    return `Tudo bem. Qual parte ficou confusa? Descreve em uma frase e retomo de outro ângulo.`;
+  }
+
+  // Default — redireciona para o currículo
+  const area = state.area || 'seu trabalho';
+  return `Anotei. Para avançar no nível, responda ao que a Aria perguntou acima — ou clique em uma das opções de resposta rápida.`;
+}
+
+function detectGeo(text) {
+  // Look for location mentions
+  const stateNames = ['são paulo', 'rio de janeiro', 'minas gerais', 'bahia', 'paraná', 'santa catarina', 'rio grande do sul', 'ceará', 'pernambuco', 'goiás', 'campinas', 'brasília'];
+  const lower = text.toLowerCase();
+  const found = stateNames.find(s => lower.includes(s));
+  if (found && !state.estado) {
+    state.estado = found;
+    state.pais = 'Brasil';
+  }
+}
+
+function setContextualQuickReplies(userMsg) {
+  const lower = userMsg.toLowerCase();
+  
+  if (lower.includes('nada') || lower.includes('pouco') || lower.includes('nunca')) {
+    setQuickReplies(['Me explica com um exemplo simples', 'Como isso pode me ajudar no trabalho?', 'Qual a diferença de pesquisar no Google?']);
+  } else if (lower.includes('chatgpt') || lower.includes('ia') || lower.includes('uso')) {
+    setQuickReplies(['Sim, uso às vezes', 'Ainda não sei usar direito', 'Qual é melhor para mim?']);
+  } else if (state.level >= 2) {
+    setQuickReplies(['Quero praticar um prompt', 'Me dá um desafio!', 'Quero ir mais fundo nisso']);
+  } else if (state.level >= 2) {
+    setQuickReplies(['Quero praticar um prompt', 'Me dá um desafio!', 'Como aplico isso no meu trabalho?']);
+  } else {
+    setQuickReplies(['Me dá um exemplo prático', 'Como funciona na prática?', 'Quero tentar agora']);
+  }
+}
+
+// ══════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════
+function addUserMessage(text) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg user';
+  div.innerHTML = `
+    <div class="msg-bubble">${escapeHtml(text)}</div>
+  `;
+  msgs.appendChild(div);
+  scrollToBottom();
+}
+
+function addAriaMessage(text, xpGain) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg aria';
+  
+  let xpHtml = '';
+  if (xpGain) {
+    xpHtml = `<div class="xp-badge-msg">⭐ +${xpGain} XP</div>`;
+  }
+
+  div.innerHTML = `
+    <div class="msg-avatar aria-av">🤖</div>
+    <div>
+      <div class="msg-bubble">${formatText(text)}</div>
+      ${xpHtml}
+    </div>
+  `;
+  msgs.appendChild(div);
+  scrollToBottom();
+}
+
+function addTypingIndicator() {
+  const msgs = document.getElementById('messages');
+  const id = 'typing-' + Date.now();
+  const div = document.createElement('div');
+  div.className = 'msg aria';
+  div.id = id;
+  div.innerHTML = `
+    <div class="msg-avatar aria-av">🤖</div>
+    <div class="msg-bubble">
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  `;
+  msgs.appendChild(div);
+  scrollToBottom();
+  return id;
+}
+
+function removeTypingIndicator(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function setQuickReplies(options) {
+  const qr = document.getElementById('quick-replies');
+  qr.innerHTML = options.map(o => 
+    `<button class="qr-btn" onclick="useQuickReply('${o}')">${o}</button>`
+  ).join('');
+}
+
+function clearQuickReplies() {
+  document.getElementById('quick-replies').innerHTML = '';
+}
+
+function useQuickReply(text) {
+  document.getElementById('chat-input').value = text;
+  sendMessage();
+}
+
+function scrollToBottom() {
+  const msgs = document.getElementById('messages');
+  setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 50);
+}
+
+function formatText(text) {
+  return escapeHtml(text)
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.appendChild(document.createTextNode(text));
+  return div.innerHTML;
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+// ══════════════════════════════════════════
+// XP & LEVELS
+// ══════════════════════════════════════════
+function addXp(amount) {
+  state.xp += amount;
+  updateXpBar();
+}
+
+function updateXpBar() {
+  const threshold = XP_THRESHOLDS[state.level] || 1100;
+  const prev = XP_THRESHOLDS[state.level - 1] || 0;
+  const progress = Math.min(((state.xp - prev) / (threshold - prev)) * 100, 100);
+  
+  document.getElementById('xp-current').textContent = state.xp;
+  document.getElementById('xp-max').textContent = threshold;
+  document.getElementById('xp-bar').style.width = progress + '%';
+}
+
+function checkLevelUp() {
+  // Reset curriculum state when level changes
+  if (_levelingUp) return;
+  const threshold = XP_THRESHOLDS[state.level];
+  if (threshold && state.xp >= threshold && state.level < 7) {
+    _levelingUp = true;
+    state.level++;
+    state.interacoesNoNivel = 0;
+    document.getElementById('level-badge').textContent = `N${state.level}`;
+    resetCurrForLevel();
+    updateXpBar();
+    
+    const levelInfo = LEVELS[state.level];
+    document.getElementById('lu-level').textContent = state.level;
+    document.getElementById('lu-emoji').textContent = levelInfo.emoji;
+    document.getElementById('lu-desc').textContent = getLevelDesc(state.level);
+    document.getElementById('lu-xp').textContent = '+' + (XP_THRESHOLDS[state.level - 1] - XP_THRESHOLDS[state.level - 2]);
+    document.getElementById('lu-total').textContent = state.xp;
+    
+    openModal('modal-levelup');
+    launchConfetti();
+    saveProgress();
+
+    // Level-up message from Aria
+    setTimeout(() => {
+      const msgs = {
+        2: `🎉 Parabéns, ${state.nome}! Você chegou ao Nível 2! Agora vamos aprender a anatomia de um prompt poderoso. Pronto(a)?`,
+        3: `✨ Nível 3 desbloqueado! Você já sabe fazer prompts básicos. Agora vamos refinar o TOM — porque a mesma pergunta pode gerar respostas completamente diferentes dependendo de como você pede.`,
+        4: `📣 Incrível, ${state.nome}! Nível 4 — Comunicação de Alto Impacto. Você vai aprender a usar IA para se comunicar melhor em qualquer situação.`,
+        5: `♟️ Nível 5 desbloqueado! Estratégia avançada. Você está entre os 20% mais preparados em IA. Vamos usar isso para análises reais!`,
+        6: `🔧 NÍVEL 6 — CONTEÚDO EXCLUSIVO! Você está prestes a ver 3 ferramentas de liderança que ainda não foram publicadas. Spoiler do livro Tríade da Nova Liderança do Arthur Alvarez. 👀`,
+        7: `🏆 NÍVEL 7 — VOCÊ É UM MESTRE! O prompt PACEF completo. Isso é o que separa usuários comuns de especialistas em IA. Vamos lá!`,
+      };
+      if (msgs[state.level]) {
+        addAriaMessage(msgs[state.level]);
+        if (state.level === 6) {
+          setQuickReplies(['Quero ver o conteúdo exclusivo!', 'O que é a Tríade da Nova Liderança?']);
+        }
+      }
+      _levelingUp = false;
+      // Launch first curriculum step for new level
+      const curr = CURRICULUM[state.level];
+      if (curr && curr.passos && curr.passos[0]) {
+        setTimeout(() => {
+          const primeiroPasso = curr.passos[0];
+          const msg = typeof primeiroPasso.aria === 'function' ? primeiroPasso.aria(state) : primeiroPasso.aria;
+          if (msg) addAriaMessage(msg);
+          setQuickReplies(primeiroPasso.quickReplies || []);
+        }, 600);
+      }
+    }, 1500);
+  }
+}
+
+function getLevelDesc(level) {
+  const descs = [
+    '', 
+    'Seus primeiros passos com IA foram dados!',
+    'Agora você aprende a construir prompts que funcionam!',
+    'Hora de dominar tom e estilo nas suas mensagens para IA.',
+    'Comunicação de alto impacto com IA ao seu lado.',
+    'Análise estratégica e decisões mais inteligentes.',
+    'Ferramentas exclusivas da Tríade da Nova Liderança — spoiler do livro!',
+    'O nível máximo. Você é um especialista em IA!',
+  ];
+  return descs[level] || 'Continue sua jornada!';
+}
+
+// ══════════════════════════════════════════
+// MODALS
+// ══════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// Close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) closeModal(this.id);
+  });
+});
+
+// ══════════════════════════════════════════
+// INVITES
+// ══════════════════════════════════════════
+function sendInvites() {
+  const inputs = document.querySelectorAll('#invite-fields .invite-input');
+  let count = 0;
+  inputs.forEach(inp => { if (inp.value.trim()) count++; });
+  
+  if (count === 0) { alert('Adicione pelo menos um amigo!'); return; }
+  
+  addXp(count * 50);
+  closeModal('modal-invite');
+  addAriaMessage(`🎁 Você indicou ${count} amigo${count > 1 ? 's' : ''}! +${count * 50} XP adicionados. Obrigada por espalhar o aprendizado, ${state.nome}!`);
+}
+
+// ══════════════════════════════════════════
+// CONFETTI
+// ══════════════════════════════════════════
+function launchConfetti() {
+  const container = document.getElementById('confetti');
+  const colors = ['#00c4a0', '#7c6fef', '#f0b429', '#ff6b9d', '#4ecdc4'];
+  
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.cssText = `
+      left: ${Math.random() * 100}%;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      width: ${Math.random() * 8 + 4}px;
+      height: ${Math.random() * 8 + 4}px;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+      animation-duration: ${Math.random() * 2 + 2}s;
+      animation-delay: ${Math.random() * 0.5}s;
+    `;
+    container.appendChild(piece);
+  }
+
+  setTimeout(() => { container.innerHTML = ''; }, 4000);
+}
+
+  // PAYWALL NIVEL 4
+  function checkPaywall(newLevel) {
+    if (newLevel >= 4 && !localStorage.getItem('iaprender_paid')) {
+      setTimeout(() => showPaywall(), 500);
+      return true;
+    }
+    return false;
+  }
+  function showPaywall() {
+    const modal = document.createElement('div');
+    modal.id = 'paywall-modal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,11,18,0.97);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML = `
+      <div style="background:#0d1420;border:1px solid #00c4a0;border-radius:20px;padding:48px 40px;max-width:480px;width:100%;text-align:center;">
+        <div style="font-size:3rem;margin-bottom:16px;">🔓</div>
+        <h2 style="font-family:Syne,sans-serif;font-size:1.8rem;color:#fff;margin-bottom:12px;">Você chegou ao Nível 4!</h2>
+        <p style="color:#aaa;margin-bottom:8px;line-height:1.6;">Para continuar sua jornada e desbloquear os Níveis 4 a 7 com as ferramentas da Tríade da Nova Liderança...</p>
+        <div style="font-size:2.2rem;font-weight:700;color:#00c4a0;margin:20px 0 4px;">R$27</div>
+        <p style="color:#aaa;font-size:0.85rem;margin-bottom:28px;">pagamento único • acesso vitalício</p>
+        <a href="https://pay.hotmart.com/K104795856U" target="_blank" 
+           onclick="localStorage.setItem('iaprender_paid','true')"
+           style="display:block;background:#00c4a0;color:#080b12;padding:16px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1rem;margin-bottom:12px;">
+          Quero desbloquear agora →
+        </a>
+        <button onclick="document.getElementById('paywall-modal').remove()" 
+          style="background:none;border:1px solid #1a1f2e;color:#aaa;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:0.85rem;">
+          Voltar ao início
+        </button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+</script>
+</body>
+</html>
